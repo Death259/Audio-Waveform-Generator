@@ -525,19 +525,19 @@
             ctx.lineWidth = 2;
 
             if (style === 'bars') {
-                const barWidth = width / samples;
+                const barWidth = Math.max(width / samples, 1);
+                // Set color once for bars
+                if (gradientColors) {
+                    ctx.fillStyle = createGradient(width, height, gradientColors);
+                } else {
+                    ctx.fillStyle = waveColor;
+                }
+                
                 for (let i = 0; i < samples; i++) {
-                    // Set color for each bar (needed for gradients to work properly)
-                    if (gradientColors) {
-                        ctx.fillStyle = createGradient(width, height, gradientColors);
-                    } else {
-                        ctx.fillStyle = waveColor;
-                    }
-                    
                     const barHeight = normalizedData[i] * height * 0.8;
                     const x = i * barWidth;
                     const y = (height - barHeight) / 2;
-                    ctx.fillRect(x, y, barWidth - 1, barHeight);
+                    ctx.fillRect(x, y, Math.ceil(barWidth), barHeight);
                 }
             } else if (style === 'line') {
                 if (gradientColors) {
@@ -555,19 +555,19 @@
                 }
                 ctx.stroke();
             } else if (style === 'mirror') {
-                const barWidth = width / samples;
+                const barWidth = Math.max(width / samples, 1);
+                // Set color once for mirror
+                if (gradientColors) {
+                    ctx.fillStyle = createGradient(width, height, gradientColors);
+                } else {
+                    ctx.fillStyle = waveColor;
+                }
+                
                 for (let i = 0; i < samples; i++) {
-                    // Set color for each bar (needed for gradients to work properly)
-                    if (gradientColors) {
-                        ctx.fillStyle = createGradient(width, height, gradientColors);
-                    } else {
-                        ctx.fillStyle = waveColor;
-                    }
-                    
                     const barHeight = normalizedData[i] * height * 0.4;
                     const x = i * barWidth;
-                    ctx.fillRect(x, height / 2, barWidth - 1, barHeight);
-                    ctx.fillRect(x, height / 2 - barHeight, barWidth - 1, barHeight);
+                    ctx.fillRect(x, height / 2, Math.ceil(barWidth), barHeight);
+                    ctx.fillRect(x, height / 2 - barHeight, Math.ceil(barWidth), barHeight);
                 }
             }
 
