@@ -116,51 +116,92 @@ Simply visit the live app and start creating waveforms immediately:
 
 ## 🎨 How to Use
 
-1. **Upload Audio**
-   - Click the upload area or drag & drop your audio file
+### 1. Upload Audio (📁 Tab)
+   - **Option A**: Click the upload area or drag & drop your audio file
+   - **Option B**: Try sample audio (tone, sweep, or beat)
    - Wait for processing (usually just a few seconds)
+   - Use the audio player to preview and trim if needed
 
-2. **Customize Your Waveform**
-   - **Color Mode**: Choose between solid colors or gradients
-   - **Waveform Color**: Pick your solid color
-   - **Background Color**: Set the background
-   - **Width & Height**: Adjust dimensions (400-4000px width, 100-2000px height)
-   - **Waveform Style**: Select Bars, Line, or Mirror
+### 2. Customize Your Waveform (🎨 Tab)
+   - **Quick Presets**: Instagram, YouTube, Twitter, Podcast, Square, Wide
+   - **Color Mode**: Choose solid, gradient presets, or custom gradient
+   - **Background**: Solid color or gradient background
+   - **Dimensions**: Set custom width and height or use quick presets
+   - **Waveform Style**: Bars, Line, Mirror, Rounded Bars, Filled Curve, or Particles
+   - **Smoothing**: Control detail level (10-200)
+   - **Opacity**: Adjust transparency (0-100%)
+   - **Channels**: Merged, Separate, Left Only, or Right Only
+   - **Effects**: Enable stroke/outline and shadow effects
 
-3. **Create Custom Gradients** (Optional)
-   - Select "Custom Gradient" from Color Mode
-   - Choose 2-5 colors
-   - Use checkboxes to enable/disable colors 3-5
-   - Colors transition smoothly across the waveform
+### 3. Generate & Export (💾 Tab)
+   - Click "🎨 Generate Waveform" to create your visualization
+   - **Export Format**: Choose PNG, SVG, or JPEG
+   - **Quick Size Presets**: Instagram Post/Story, YouTube, Twitter, Facebook
+   - **Download**: Save to your device
+   - **Copy to Clipboard**: Quick sharing
+   - **Save as Preset**: Store your settings for later
+   - **Share Config**: Generate a URL to share your exact settings
 
-4. **Download**
-   - Click "Download Waveform Image"
-   - Save the PNG file to your device
+### 4. Advanced Features
+   - **Undo/Redo**: Step through changes with buttons or Ctrl+Z/Ctrl+Y
+   - **Dark Mode**: Toggle with 🌙 button or press D
+   - **Keyboard Shortcuts**: See help menu (⌨️ button) for all shortcuts
+   - **Audio Trimming**: Set start/end times to visualize specific sections
+   - **Presets**: Save and load your favorite configurations
+
+## 🎨 Waveform Styles
+
+- **Bars** - Classic vertical bars
+- **Line** - Continuous waveform line
+- **Mirror** - Symmetrical top and bottom reflection
+- **Rounded Bars** - Bars with rounded corners for a softer look
+- **Filled Curve** - Smooth filled area under the waveform
+- **Particles** - Dotted particle-based visualization
 
 ## 🎨 Gradient Presets
 
+- **Solid** - Single color waveform
 - **Rainbow** - Classic 7-color rainbow spectrum
 - **Red/White/Blue** - Patriotic color scheme
 - **Sunset** - Warm pinks, yellows, and oranges
 - **Ocean** - Cool blues and purples
-- **Custom** - Your own combination of 2-5 colors
+- **Custom** - Your own combination of 2-5 colors with smooth transitions
 
 ## 💡 Tips & Best Practices
 
 - **High Resolution**: Use larger dimensions (1800x400 or higher) for professional results
-- **Aspect Ratio**: Wide aspect ratios (3:1 or 4:1) work best for waveforms
+- **Aspect Ratio**: Wide aspect ratios (3:1 or 4:1) work best for most waveforms
 - **Contrast**: Ensure good contrast between waveform and background colors
-- **File Size**: Larger audio files may take a few extra seconds to process
-- **Gradients**: Use 2-3 colors for subtle transitions, 4-5 for vibrant effects
+- **Smoothing**: Lower values (10-30) for detailed waveforms, higher (100-200) for smooth, minimalist designs
+- **Trimming**: Use audio trimming to focus on the most interesting parts of your track
+- **Channels**: Use "Separate" for stereo visualization, "Merged" for mono appearance
+- **Effects**: Subtle shadows (5-10px blur) add depth without overwhelming
+- **Presets**: Save your favorite settings to speed up future projects
+- **Dark Mode**: Use dark mode when working in low-light environments
+- **Keyboard Shortcuts**: Learn the shortcuts for faster workflow
+- **SVG Export**: Use SVG format when you need to scale images for different sizes
+- **Sample Audio**: Test different styles and settings with sample audio before uploading your own files
 
 ## 🛠️ Technical Details
 
 ### Built With
 
-- **HTML5 Canvas** - For rendering waveforms
-- **Web Audio API** - For audio processing
+- **HTML5 Canvas** - For high-performance waveform rendering
+- **Web Audio API** - For audio processing and playback
 - **Vanilla JavaScript** - No frameworks, pure performance
 - **PWA Technology** - Service workers and manifest for app-like experience
+- **LocalStorage** - For saving presets and settings
+
+### Key Features Under the Hood
+
+- Real-time audio analysis and visualization
+- Configurable sample rate and smoothing algorithms
+- Multi-channel audio support (stereo and mono)
+- Gradient generation with smooth color interpolation
+- Undo/Redo state management (50 history states)
+- URL-based configuration sharing
+- Clipboard API integration
+- Vector (SVG) and raster (PNG/JPEG) export
 
 ### Browser Compatibility
 
@@ -182,8 +223,8 @@ Want to run it locally or contribute?
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/waveform-generator.git
-cd waveform-generator
+git clone https://github.com/death259/Audio-Waveform-Generator.git
+cd Audio-Waveform-Generator
 ```
 
 2. Open `index.html` in your browser:
@@ -217,6 +258,8 @@ Contributions are welcome! Feel free to:
 - 💡 Suggest new features
 - 🔧 Submit pull requests
 - 📖 Improve documentation
+- 🎨 Share your waveform designs
+- ⭐ Star the repository if you find it useful!
 
 ## 📄 License
 
@@ -239,8 +282,9 @@ For the full license text, see the [LICENSE](LICENSE) file or visit [GNU GPL-3.0
 ## 🙏 Acknowledgments
 
 - Built with ❤️ for creators, podcasters, musicians, and audio enthusiasts
-- Inspired by the need for a simple, free waveform generator
+- Inspired by the need for a powerful, free, and privacy-focused waveform generator
 - Thanks to the open web platform for making this possible
+- Special thanks to the Web Audio API and Canvas API communities
 
 ## 📧 Contact & Support
 
@@ -249,9 +293,10 @@ Found a bug? Have a feature request? Want to say thanks?
 - Open an issue on GitHub
 - Star the repository if you find it useful!
 - Share it with others who might benefit
+- Follow the project for updates
 
 ---
 
-**Made with 🎵 by [Your Name]**
+**Made with 🎵 by AI and Death259**
 
-[⬆ Back to Top](#-audio-waveform-generator)
+[⬆ Back to Top](#-audio-waveform-generator-pro)
