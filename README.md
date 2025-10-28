@@ -30,7 +30,7 @@ A beautiful, free Progressive Web App (PWA) that generates stunning waveform ima
 ### Online Version
 
 Simply visit the live app and start creating waveforms immediately:
-[Your GitHub Pages URL here]
+[https://death259.github.io/Audio-Waveform-Generator/]
 
 ### Install as PWA (Recommended)
 
