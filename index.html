@@ -1,4 +1,1110 @@
-<!DOCTYPE html>
+<select id="channels">
+                        <option value="merged">Merged</option>
+                        <option value="separate">Separate</option>
+                        <option value="left">Left Only</option>
+                        <option value="right">Right Only</option>
+                    </select>
+                </div>
+            </div>
+
+            <h3 style="margin: 20px 0 15px; color: var(--text-dark);">Effects</h3>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label>
+                        <input type="checkbox" id="strokeEnabled">
+                        Enable Stroke/Outline
+                    </label>
+                    <input type="color" id="strokeColor" value="#000000" disabled>
+                </div>
+                <div class="control-group">
+                    <label for="strokeWidth">Stroke Width: <span id="strokeWidthValue">2</span>px</label>
+                    <input type="range" id="strokeWidth" min="1" max="10" value="2" disabled>
+                </div>
+                <div class="control-group">
+                    <label>
+                        <input type="checkbox" id="shadowEnabled">
+                        Enable Shadow
+                    </label>
+                </div>
+                <div class="control-group">
+                    <label for="shadowBlur">Shadow Blur: <span id="shadowBlurValue">10</span>px</label>
+                    <input type="range" id="shadowBlur" min="0" max="50" value="10" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="export-tab">
+            <h3 style="margin-bottom: 15px; color: var(--text-dark);">Export Format</h3>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="exportFormat">Format</label>
+                    <select id="exportFormat">
+                        <option value="png">PNG</option>
+                        <option value="svg">SVG (Vector)</option>
+                        <option value="jpeg">JPEG</option>
+                    </select>
+                </div>
+                <div class="control-group" id="jpegQualityGroup" style="display: none;">
+                    <label for="jpegQuality">JPEG Quality: <span id="jpegQualityValue">90</span>%</label>
+                    <input type="range" id="jpegQuality" min="1" max="100" value="90">
+                </div>
+            </div>
+
+            <h3 style="margin: 20px 0 15px; color: var(--text-dark);">Quick Export Sizes</h3>
+            <div class="preset-buttons">
+                <button class="preset-btn" data-size="instagram-post">📱 IG Post<br><small>1080x1080</small></button>
+                <button class="preset-btn" data-size="instagram-story">📱 IG Story<br><small>1080x1920</small></button>
+                <button class="preset-btn" data-size="youtube-thumb">📺 YT Thumb<br><small>1280x720</small></button>
+                <button class="preset-btn" data-size="twitter-post">🐦 Twitter<br><small>1200x675</small></button>
+                <button class="preset-btn" data-size="facebook-cover">📘 FB Cover<br><small>820x312</small></button>
+            </div>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="canvas-container" id="canvasContainer">
+            <canvas id="waveformCanvas"></canvas>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="generateBtn" disabled>🎨 Generate Waveform</button>
+            <button class="btn btn-primary" id="downloadBtn" disabled>💾 Download</button>
+            <button class="btn btn-secondary" id="copyBtn" disabled>📋 Copy to Clipboard</button>
+            <button class="btn btn-secondary" id="savePresetBtn" disabled>💾 Save as Preset</button>
+            <button class="btn btn-secondary" id="shareBtn" disabled>🔗 Share Config</button>
+        </div>
+    </div>
+
+    <!-- Presets Modal -->
+    <div class="modal" id="presetsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color: var(--text-dark);">My Presets</h3>
+                <button class="modal-close" id="closePresetsModal">×</button>
+            </div>
+            <div class="preset-list" id="presetList"></div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color: var(--text-dark);">Keyboard Shortcuts</h3>
+                <button class="modal-close" id="closeHelpModal">×</button>
+            </div>
+            <div style="color: var(--text-dark);">
+                <p><strong>Ctrl/Cmd + Z</strong> - Undo</p>
+                <p><strong>Ctrl/Cmd + Y</strong> - Redo</p>
+                <p><strong>Ctrl/Cmd + S</strong> - Download</p>
+                <p><strong>Ctrl/Cmd + C</strong> - Copy to Clipboard</p>
+                <p><strong>Space</strong> - Play/Pause Audio</p>
+                <p><strong>G</strong> - Generate Waveform</p>
+                <p><strong>D</strong> - Toggle Dark Mode</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    self.addEventListener('install', (e) => {
+                        e.waitUntil(caches.open('waveform-v2').then((cache) => cache.addAll(['/'])));
+                    });
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(caches.match(e.request).then((response) => response || fetch(e.request)));
+                    });
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl);
+            });
+        }
+
+        // State Management
+        const state = {
+            audioBuffer: null,
+            audioContext: null,
+            audioSource: null,
+            isPlaying: false,
+            startTime: 0,
+            pauseTime: 0,
+            trimStart: 0,
+            trimEnd: 0,
+            history: [],
+            historyIndex: -1,
+            currentSettings: {}
+        };
+
+        // DOM Elements - will be initialized after DOM loads
+        let els = {};
+        let ctx = null;
+
+        // Preset gradients
+        const presetGradients = {
+            rainbow: ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#9400d3'],
+            redwhiteblue: ['#b22234', '#ffffff', '#3c3b6e'],
+            sunset: ['#ff6b6b', '#feca57', '#ff9ff3', '#54a0ff'],
+            ocean: ['#667eea', '#764ba2', '#f093fb', '#4facfe']
+        };
+
+        // Size presets
+        const sizePresets = {
+            'instagram': { width: 1080, height: 1080 },
+            'youtube': { width: 1280, height: 720 },
+            'twitter': { width: 1200, height: 675 },
+            'podcast': { width: 3000, height: 3000 },
+            'square': { width: 1000, height: 1000 },
+            'wide': { width: 1920, height: 1080 },
+            'instagram-post': { width: 1080, height: 1080 },
+            'instagram-story': { width: 1080, height: 1920 },
+            'youtube-thumb': { width: 1280, height: 720 },
+            'twitter-post': { width: 1200, height: 675 },
+            'facebook-cover': { width: 820, height: 312 }
+        };
+
+        // Initialize after DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+
+        function init() {
+            // Initialize DOM elements
+            els = {
+                uploadArea: document.getElementById('uploadArea'),
+                fileInput: document.getElementById('audioFile'),
+                canvas: document.getElementById('waveformCanvas'),
+                canvasContainer: document.getElementById('canvasContainer'),
+                audioPlayer: document.getElementById('audioPlayer'),
+                playBtn: document.getElementById('playBtn'),
+                timeline: document.getElementById('timeline'),
+                timelineProgress: document.getElementById('timelineProgress'),
+                timeDisplay: document.getElementById('timeDisplay'),
+                trimStart: document.getElementById('trimStart'),
+                trimEnd: document.getElementById('trimEnd'),
+                status: document.getElementById('status'),
+                generateBtn: document.getElementById('generateBtn'),
+                downloadBtn: document.getElementById('downloadBtn'),
+                copyBtn: document.getElementById('copyBtn'),
+                darkModeBtn: document.getElementById('darkModeBtn'),
+                undoBtn: document.getElementById('undoBtn'),
+                redoBtn: document.getElementById('redoBtn'),
+                gradientPreview: document.getElementById('gradientPreview'),
+                presetsBtn: document.getElementById('presetsBtn'),
+                helpBtn: document.getElementById('helpBtn'),
+                presetsModal: document.getElementById('presetsModal'),
+                helpModal: document.getElementById('helpModal'),
+                savePresetBtn: document.getElementById('savePresetBtn'),
+                shareBtn: document.getElementById('shareBtn'),
+                exportFormat: document.getElementById('exportFormat'),
+                jpegQuality: document.getElementById('jpegQuality'),
+                jpegQualityGroup: document.getElementById('jpegQualityGroup')
+            };
+
+            ctx = els.canvas.getContext('2d');
+            
+            setupEventListeners();
+            loadSettings();
+            updateGradientPreview();
+            loadURLParams();
+        }
+
+        function setupEventListeners() {
+            // File upload
+            els.uploadArea.addEventListener('click', () => els.fileInput.click());
+            els.uploadArea.addEventListener('dragover', handleDragOver);
+            els.uploadArea.addEventListener('dragleave', handleDragLeave);
+            els.uploadArea.addEventListener('drop', handleDrop);
+            els.fileInput.addEventListener('change', handleFileSelect);
+
+            // Sample audio
+            document.querySelectorAll('[data-sample]').forEach(btn => {
+                btn.addEventListener('click', () => loadSampleAudio(btn.dataset.sample));
+            });
+
+            // Audio player
+            els.playBtn.addEventListener('click', togglePlay);
+            els.timeline.addEventListener('click', seekAudio);
+            document.getElementById('applyTrim').addEventListener('click', applyTrim);
+
+            // Tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+
+            // Controls
+            const controls = ['colorMode', 'waveColor', 'bgColor', 'bgColor2', 'bgColorMode', 
+                'width', 'height', 'style', 'smoothing', 'opacity', 'channels',
+                'strokeEnabled', 'strokeColor', 'strokeWidth', 'shadowEnabled', 'shadowBlur',
+                'gradColor1', 'gradColor2', 'gradColor3', 'gradColor4', 'gradColor5',
+                'useColor3', 'useColor4', 'useColor5'];
+            
+            controls.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('change', handleSettingChange);
+                    el.addEventListener('input', handleSettingChange);
+                }
+            });
+
+            // Range value displays
+            document.getElementById('smoothing').addEventListener('input', (e) => {
+                document.getElementById('smoothingValue').textContent = e.target.value;
+            });
+            document.getElementById('opacity').addEventListener('input', (e) => {
+                document.getElementById('opacityValue').textContent = e.target.value;
+            });
+            document.getElementById('strokeWidth').addEventListener('input', (e) => {
+                document.getElementById('strokeWidthValue').textContent = e.target.value;
+            });
+            document.getElementById('shadowBlur').addEventListener('input', (e) => {
+                document.getElementById('shadowBlurValue').textContent = e.target.value;
+            });
+            document.getElementById('jpegQuality').addEventListener('input', (e) => {
+                document.getElementById('jpegQualityValue').textContent = e.target.value;
+            });
+
+            // Stroke/Shadow toggles
+            document.getElementById('strokeEnabled').addEventListener('change', (e) => {
+                document.getElementById('strokeColor').disabled = !e.target.checked;
+                document.getElementById('strokeWidth').disabled = !e.target.checked;
+            });
+            document.getElementById('shadowEnabled').addEventListener('change', (e) => {
+                document.getElementById('shadowBlur').disabled = !e.target.checked;
+            });
+
+            // Color mode
+            document.getElementById('colorMode').addEventListener('change', (e) => {
+                document.getElementById('solidColorGroup').style.display = 
+                    e.target.value === 'solid' ? 'flex' : 'none';
+                document.getElementById('customGradientControls').style.display = 
+                    e.target.value === 'custom' ? 'block' : 'none';
+            });
+
+            // Background mode
+            document.getElementById('bgColorMode').addEventListener('change', (e) => {
+                document.getElementById('bgGradientGroup').style.display = 
+                    e.target.value === 'gradient' ? 'flex' : 'none';
+            });
+
+            // Export format
+            els.exportFormat.addEventListener('change', (e) => {
+                els.jpegQualityGroup.style.display = e.target.value === 'jpeg' ? 'flex' : 'none';
+            });
+
+            // Buttons
+            els.generateBtn.addEventListener('click', generateWaveform);
+            els.downloadBtn.addEventListener('click', downloadWaveform);
+            els.copyBtn.addEventListener('click', copyToClipboard);
+            els.darkModeBtn.addEventListener('click', toggleDarkMode);
+            els.undoBtn.addEventListener('click', undo);
+            els.redoBtn.addEventListener('click', redo);
+            els.savePresetBtn.addEventListener('click', savePreset);
+            els.shareBtn.addEventListener('click', shareConfig);
+            els.presetsBtn.addEventListener('click', () => openModal('presetsModal'));
+            els.helpBtn.addEventListener('click', () => openModal('helpModal'));
+
+            // Modal closes
+            document.getElementById('closePresetsModal').addEventListener('click', () => closeModal('presetsModal'));
+            document.getElementById('closeHelpModal').addEventListener('click', () => closeModal('helpModal'));
+
+            // Preset buttons
+            document.querySelectorAll('[data-preset]').forEach(btn => {
+                btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
+            });
+
+            // Size presets
+            document.querySelectorAll('[data-size]').forEach(btn => {
+                btn.addEventListener('click', () => applySizePreset(btn.dataset.size));
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboard);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            els.uploadArea.classList.add('dragover');
+        }
+
+        function handleDragLeave() {
+            els.uploadArea.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            els.uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) {
+                handleFiles(e.dataTransfer.files);
+            }
+        }
+
+        function handleFileSelect(e) {
+            if (e.target.files.length > 0) {
+                handleFiles(e.target.files);
+            }
+        }
+
+        async function handleFiles(files) {
+            // For now, just handle the first file
+            const file = files[0];
+            if (!file.type.startsWith('audio/')) {
+                showStatus('Please upload a valid audio file', 'error');
+                return;
+            }
+
+            showStatus('Processing audio file...', 'processing');
+            
+            try {
+                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const arrayBuffer = await file.arrayBuffer();
+                state.audioBuffer = await state.audioContext.decodeAudioData(arrayBuffer);
+                
+                els.trimEnd.value = state.audioBuffer.duration;
+                els.trimEnd.max = state.audioBuffer.duration;
+                state.trimEnd = state.audioBuffer.duration;
+                
+                showStatus('Audio loaded successfully!', 'success');
+                els.audioPlayer.style.display = 'block';
+                els.generateBtn.disabled = false;
+                
+                switchTab('customize');
+            } catch (error) {
+                showStatus('Error processing audio: ' + error.message, 'error');
+            }
+        }
+
+        async function loadSampleAudio(type) {
+            showStatus('Generating sample audio...', 'processing');
+            
+            try {
+                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const sampleRate = state.audioContext.sampleRate;
+                const duration = 3;
+                const buffer = state.audioContext.createBuffer(2, duration * sampleRate, sampleRate);
+                
+                for (let channel = 0; channel < 2; channel++) {
+                    const data = buffer.getChannelData(channel);
+                    
+                    if (type === 'tone') {
+                        // Simple 440Hz tone
+                        for (let i = 0; i < data.length; i++) {
+                            data[i] = Math.sin(2 * Math.PI * 440 * i / sampleRate) * 0.3;
+                        }
+                    } else if (type === 'sweep') {
+                        // Frequency sweep
+                        for (let i = 0; i < data.length; i++) {
+                            const freq = 200 + (i / data.length) * 2000;
+                            data[i] = Math.sin(2 * Math.PI * freq * i / sampleRate) * 0.3;
+                        }
+                    } else if (type === 'drums') {
+                        // Simple beat pattern
+                        for (let i = 0; i < data.length; i++) {
+                            const beat = Math.floor(i / (sampleRate * 0.5)) % 4;
+                            if (beat === 0 || beat === 2) {
+                                data[i] = Math.random() * 0.5 * Math.exp(-((i % (sampleRate * 0.5)) / sampleRate) * 10);
+                            }
+                        }
+                    }
+                }
+                
+                state.audioBuffer = buffer;
+                els.trimEnd.value = duration;
+                els.trimEnd.max = duration;
+                state.trimEnd = duration;
+                
+                showStatus('Sample audio loaded!', 'success');
+                els.audioPlayer.style.display = 'block';
+                els.generateBtn.disabled = false;
+                
+                switchTab('customize');
+            } catch (error) {
+                showStatus('Error generating sample: ' + error.message, 'error');
+            }
+        }
+
+        function togglePlay() {
+            if (!state.audioBuffer) return;
+            
+            if (state.isPlaying) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+        }
+
+        function playAudio() {
+            if (state.audioSource) {
+                state.audioSource.stop();
+            }
+            
+            state.audioSource = state.audioContext.createBufferSource();
+            state.audioSource.buffer = state.audioBuffer;
+            state.audioSource.connect(state.audioContext.destination);
+            
+            const offset = state.pauseTime || parseFloat(els.trimStart.value);
+            state.audioSource.start(0, offset);
+            state.startTime = state.audioContext.currentTime - offset;
+            state.isPlaying = true;
+            els.playBtn.textContent = '⏸';
+            
+            updateTimeline();
+            
+            state.audioSource.onended = () => {
+                state.isPlaying = false;
+                els.playBtn.textContent = '▶';
+                state.pauseTime = 0;
+            };
+        }
+
+        function pauseAudio() {
+            if (state.audioSource) {
+                state.audioSource.stop();
+                state.pauseTime = state.audioContext.currentTime - state.startTime;
+                state.isPlaying = false;
+                els.playBtn.textContent = '▶';
+            }
+        }
+
+        function seekAudio(e) {
+            const rect = els.timeline.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            const time = percent * state.audioBuffer.duration;
+            
+            if (state.isPlaying) {
+                pauseAudio();
+                state.pauseTime = time;
+                playAudio();
+            } else {
+                state.pauseTime = time;
+                els.timelineProgress.style.width = (percent * 100) + '%';
+                updateTimeDisplay(time);
+            }
+        }
+
+        function updateTimeline() {
+            if (!state.isPlaying) return;
+            
+            const currentTime = state.audioContext.currentTime - state.startTime;
+            const duration = state.audioBuffer.duration;
+            const percent = Math.min((currentTime / duration) * 100, 100);
+            
+            els.timelineProgress.style.width = percent + '%';
+            updateTimeDisplay(currentTime);
+            
+            if (currentTime < duration) {
+                requestAnimationFrame(updateTimeline);
+            }
+        }
+
+        function updateTimeDisplay(current) {
+            const duration = state.audioBuffer.duration;
+            els.timeDisplay.textContent = formatTime(current) + ' / ' + formatTime(duration);
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        function applyTrim() {
+            state.trimStart = parseFloat(els.trimStart.value);
+            state.trimEnd = parseFloat(els.trimEnd.value);
+            showStatus('Trim applied! Generate waveform to see changes.', 'success');
+        }
+
+        function handleSettingChange() {
+            saveState();
+            updateGradientPreview();
+        }
+
+        function updateGradientPreview() {
+            const colors = getGradientColors();
+            if (colors && colors.length > 0) {
+                const gradient = 'linear-gradient(to right, ' + colors.join(', ') + ')';
+                els.gradientPreview.style.background = gradient;
+                els.gradientPreview.style.display = 'block';
+            } else {
+                els.gradientPreview.style.display = 'none';
+            }
+        }
+
+        function getGradientColors() {
+            const mode = document.getElementById('colorMode').value;
+            
+            if (mode === 'solid') {
+                return null;
+            } else if (presetGradients[mode]) {
+                return presetGradients[mode];
+            } else if (mode === 'custom') {
+                const colors = [
+                    document.getElementById('gradColor1').value,
+                    document.getElementById('gradColor2').value
+                ];
+                if (document.getElementById('useColor3').checked) colors.push(document.getElementById('gradColor3').value);
+                if (document.getElementById('useColor4').checked) colors.push(document.getElementById('gradColor4').value);
+                if (document.getElementById('useColor5').checked) colors.push(document.getElementById('gradColor5').value);
+                return colors;
+            }
+            return null;
+        }
+
+        function createGradient(width, height, colors) {
+            const gradient = ctx.createLinearGradient(0, 0, width, 0);
+            colors.forEach((color, i) => {
+                gradient.addColorStop(i / (colors.length - 1), color);
+            });
+            return gradient;
+        }
+
+        async function generateWaveform() {
+            if (!state.audioBuffer) return;
+            
+            showStatus('Generating waveform...', 'processing');
+            
+            try {
+                const width = parseInt(document.getElementById('width').value);
+                const height = parseInt(document.getElementById('height').value);
+                const style = document.getElementById('style').value;
+                const smoothing = parseInt(document.getElementById('smoothing').value);
+                const opacity = parseInt(document.getElementById('opacity').value) / 100;
+                const channelMode = document.getElementById('channels').value;
+                
+                els.canvas.width = width;
+                els.canvas.height = height;
+                
+                // Background
+                drawBackground(width, height);
+                
+                // Get audio data
+                const startSample = Math.floor(state.trimStart * state.audioBuffer.sampleRate);
+                const endSample = Math.floor(state.trimEnd * state.audioBuffer.sampleRate);
+                
+                ctx.globalAlpha = opacity;
+                
+                // Apply shadow
+                if (document.getElementById('shadowEnabled').checked) {
+                    const blur = parseInt(document.getElementById('shadowBlur').value);
+                    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                    ctx.shadowBlur = blur;
+                    ctx.shadowOffsetX = blur / 2;
+                    ctx.shadowOffsetY = blur / 2;
+                }
+                
+                if (channelMode === 'merged' || state.audioBuffer.numberOfChannels === 1) {
+                    drawChannel(0, width, height, startSample, endSample, smoothing, style, height / 2);
+                } else if (channelMode === 'separate') {
+                    drawChannel(0, width, height / 2, startSample, endSample, smoothing, style, height / 4);
+                    drawChannel(1, width, height / 2, startSample, endSample, smoothing, style, height * 3 / 4);
+                } else if (channelMode === 'left') {
+                    drawChannel(0, width, height, startSample, endSample, smoothing, style, height / 2);
+                } else if (channelMode === 'right' && state.audioBuffer.numberOfChannels > 1) {
+                    drawChannel(1, width, height, startSample, endSample, smoothing, style, height / 2);
+                }
+                
+                ctx.globalAlpha = 1;
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+                
+                els.canvasContainer.style.display = 'block';
+                els.downloadBtn.disabled = false;
+                els.copyBtn.disabled = false;
+                els.savePresetBtn.disabled = false;
+                els.shareBtn.disabled = false;
+                
+                showStatus('Waveform generated!', 'success');
+                switchTab('export');
+            } catch (error) {
+                showStatus('Error generating waveform: ' + error.message, 'error');
+            }
+        }
+
+        function drawBackground(width, height) {
+            const bgMode = document.getElementById('bgColorMode').value;
+            
+            if (bgMode === 'solid') {
+                ctx.fillStyle = document.getElementById('bgColor').value;
+                ctx.fillRect(0, 0, width, height);
+            } else {
+                const color1 = document.getElementById('bgColor').value;
+                const color2 = document.getElementById('bgColor2').value;
+                const gradient = ctx.createLinearGradient(0, 0, width, height);
+                gradient.addColorStop(0, color1);
+                gradient.addColorStop(1, color2);
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+            }
+        }
+
+        function drawChannel(channelIndex, width, height, startSample, endSample, smoothing, style, centerY) {
+            const rawData = state.audioBuffer.getChannelData(channelIndex);
+            const samples = Math.min(width * smoothing / 50, width * 4);
+            const length = endSample - startSample;
+            const blockSize = Math.floor(length / samples);
+            const filteredData = [];
+            
+            for (let i = 0; i < samples; i++) {
+                let sum = 0;
+                const start = startSample + i * blockSize;
+                for (let j = 0; j < blockSize && start + j < endSample; j++) {
+                    sum += Math.abs(rawData[start + j]);
+                }
+                filteredData.push(sum / blockSize);
+            }
+            
+            const max = Math.max(...filteredData, 0.1);
+            const normalizedData = filteredData.map(v => v / max);
+            
+            // Setup colors
+            const gradientColors = getGradientColors();
+            if (gradientColors) {
+                ctx.fillStyle = createGradient(width, height, gradientColors);
+                ctx.strokeStyle = createGradient(width, height, gradientColors);
+            } else {
+                const color = document.getElementById('waveColor').value;
+                ctx.fillStyle = color;
+                ctx.strokeStyle = color;
+            }
+            
+            ctx.lineWidth = 2;
+            
+            // Apply stroke if enabled
+            const strokeEnabled = document.getElementById('strokeEnabled').checked;
+            if (strokeEnabled) {
+                ctx.lineWidth = parseInt(document.getElementById('strokeWidth').value);
+            }
+            
+            // Draw based on style
+            if (style === 'bars') {
+                drawBars(normalizedData, width, height, centerY);
+            } else if (style === 'roundedBars') {
+                drawRoundedBars(normalizedData, width, height, centerY);
+            } else if (style === 'line') {
+                drawLine(normalizedData, width, height, centerY);
+            } else if (style === 'mirror') {
+                drawMirror(normalizedData, width, height, centerY);
+            } else if (style === 'filled') {
+                drawFilled(normalizedData, width, height, centerY);
+            } else if (style === 'particles') {
+                drawParticles(normalizedData, width, height, centerY);
+            }
+            
+            // Draw stroke if enabled
+            if (strokeEnabled) {
+                ctx.strokeStyle = document.getElementById('strokeColor').value;
+                if (style === 'bars' || style === 'roundedBars' || style === 'mirror') {
+                    // Stroke already applied in drawing
+                } else {
+                    ctx.stroke();
+                }
+            }
+        }
+
+        function drawBars(data, width, height, centerY) {
+            const barWidth = Math.max(width / data.length, 1);
+            for (let i = 0; i < data.length; i++) {
+                const barHeight = data[i] * height * 0.8;
+                const x = i * barWidth;
+                const y = centerY - barHeight / 2;
+                ctx.fillRect(x, y, Math.ceil(barWidth), barHeight);
+            }
+        }
+
+        function drawRoundedBars(data, width, height, centerY) {
+            const barWidth = Math.max(width / data.length, 1);
+            const radius = Math.min(barWidth / 2, 5);
+            for (let i = 0; i < data.length; i++) {
+                const barHeight = data[i] * height * 0.8;
+                const x = i * barWidth;
+                const y = centerY - barHeight / 2;
+                roundRect(ctx, x, y, Math.ceil(barWidth) - 1, barHeight, radius);
+                ctx.fill();
+            }
+        }
+
+        function roundRect(ctx, x, y, w, h, r) {
+            if (w < 2 * r) r = w / 2;
+            if (h < 2 * r) r = h / 2;
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+        }
+
+        function drawLine(data, width, height, centerY) {
+            ctx.beginPath();
+            for (let i = 0; i < data.length; i++) {
+                const x = (i / data.length) * width;
+                const y = centerY + (data[i] * height * 0.4) * (i % 2 ? 1 : -1);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        function drawMirror(data, width, height, centerY) {
+            const barWidth = Math.max(width / data.length, 1);
+            for (let i = 0; i < data.length; i++) {
+                const barHeight = data[i] * height * 0.4;
+                const x = i * barWidth;
+                ctx.fillRect(x, centerY, Math.ceil(barWidth), barHeight);
+                ctx.fillRect(x, centerY - barHeight, Math.ceil(barWidth), barHeight);
+            }
+        }
+
+        function drawFilled(data, width, height, centerY) {
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            for (let i = 0; i < data.length; i++) {
+                const x = (i / data.length) * width;
+                const y = centerY - (data[i] * height * 0.4);
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(width, centerY);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawParticles(data, width, height, centerY) {
+            const particleSize = 3;
+            for (let i = 0; i < data.length; i++) {
+                const x = (i / data.length) * width;
+                const amplitude = data[i] * height * 0.4;
+                const numParticles = Math.ceil(amplitude / 10);
+                
+                for (let j = 0; j < numParticles; j++) {
+                    const y = centerY + (j / numParticles - 0.5) * amplitude * 2;
+                    ctx.beginPath();
+                    ctx.arc(x, y, particleSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        async function downloadWaveform() {
+            const format = els.exportFormat.value;
+            
+            if (format === 'svg') {
+                downloadSVG();
+            } else if (format === 'png') {
+                const link = document.createElement('a');
+                link.download = 'waveform.png';
+                link.href = els.canvas.toDataURL('image/png');
+                link.click();
+                showStatus('Downloaded as PNG!', 'success');
+            } else if (format === 'jpeg') {
+                const quality = parseInt(els.jpegQuality.value) / 100;
+                const link = document.createElement('a');
+                link.download = 'waveform.jpg';
+                link.href = els.canvas.toDataURL('image/jpeg', quality);
+                link.click();
+                showStatus('Downloaded as JPEG!', 'success');
+            }
+        }
+
+        function downloadSVG() {
+            // Create a simplified SVG version
+            const width = els.canvas.width;
+            const height = els.canvas.height;
+            const bgColor = document.getElementById('bgColor').value;
+            
+            let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">`;
+            svg += `<rect width="${width}" height="${height}" fill="${bgColor}"/>`;
+            svg += `<path d="M0,${height/2} `;
+            
+            // Simplified path from canvas
+            const imageData = ctx.getImageData(0, 0, width, height);
+            // This is a simplified approach - full SVG export would need more complex logic
+            
+            svg += `" stroke="${document.getElementById('waveColor').value}" fill="none" stroke-width="2"/>`;
+            svg += '</svg>';
+            
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = 'waveform.svg';
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            showStatus('Downloaded as SVG!', 'success');
+        }
+
+        async function copyToClipboard() {
+            try {
+                const blob = await new Promise(resolve => els.canvas.toBlob(resolve));
+                await navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]);
+                showStatus('Copied to clipboard!', 'success');
+            } catch (error) {
+                showStatus('Failed to copy to clipboard', 'error');
+            }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            els.darkModeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        function saveState() {
+            const settings = getCurrentSettings();
+            state.history = state.history.slice(0, state.historyIndex + 1);
+            state.history.push(settings);
+            state.historyIndex++;
+            
+            if (state.history.length > 50) {
+                state.history.shift();
+                state.historyIndex--;
+            }
+            
+            updateHistoryButtons();
+        }
+
+        function undo() {
+            if (state.historyIndex > 0) {
+                state.historyIndex--;
+                applySettings(state.history[state.historyIndex]);
+                updateHistoryButtons();
+                if (state.audioBuffer) generateWaveform();
+            }
+        }
+
+        function redo() {
+            if (state.historyIndex < state.history.length - 1) {
+                state.historyIndex++;
+                applySettings(state.history[state.historyIndex]);
+                updateHistoryButtons();
+                if (state.audioBuffer) generateWaveform();
+            }
+        }
+
+        function updateHistoryButtons() {
+            els.undoBtn.disabled = state.historyIndex <= 0;
+            els.redoBtn.disabled = state.historyIndex >= state.history.length - 1;
+        }
+
+        function getCurrentSettings() {
+            return {
+                colorMode: document.getElementById('colorMode').value,
+                waveColor: document.getElementById('waveColor').value,
+                bgColor: document.getElementById('bgColor').value,
+                bgColor2: document.getElementById('bgColor2').value,
+                bgColorMode: document.getElementById('bgColorMode').value,
+                width: document.getElementById('width').value,
+                height: document.getElementById('height').value,
+                style: document.getElementById('style').value,
+                smoothing: document.getElementById('smoothing').value,
+                opacity: document.getElementById('opacity').value,
+                channels: document.getElementById('channels').value,
+                strokeEnabled: document.getElementById('strokeEnabled').checked,
+                strokeColor: document.getElementById('strokeColor').value,
+                strokeWidth: document.getElementById('strokeWidth').value,
+                shadowEnabled: document.getElementById('shadowEnabled').checked,
+                shadowBlur: document.getElementById('shadowBlur').value,
+                gradColor1: document.getElementById('gradColor1').value,
+                gradColor2: document.getElementById('gradColor2').value,
+                gradColor3: document.getElementById('gradColor3').value,
+                gradColor4: document.getElementById('gradColor4').value,
+                gradColor5: document.getElementById('gradColor5').value,
+                useColor3: document.getElementById('useColor3').checked,
+                useColor4: document.getElementById('useColor4').checked,
+                useColor5: document.getElementById('useColor5').checked
+            };
+        }
+
+        function applySettings(settings) {
+            Object.keys(settings).forEach(key => {
+                const el = document.getElementById(key);
+                if (el) {
+                    if (el.type === 'checkbox') {
+                        el.checked = settings[key];
+                    } else {
+                        el.value = settings[key];
+                    }
+                    el.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+
+        function savePreset() {
+            const name = prompt('Enter preset name:');
+            if (!name) return;
+            
+            const presets = JSON.parse(localStorage.getItem('waveformPresets') || '[]');
+            presets.push({
+                name: name,
+                settings: getCurrentSettings(),
+                timestamp: Date.now()
+            });
+            localStorage.setItem('waveformPresets', JSON.stringify(presets));
+            showStatus('Preset saved!', 'success');
+            loadPresetsList();
+        }
+
+        function loadPresetsList() {
+            const presets = JSON.parse(localStorage.getItem('waveformPresets') || '[]');
+            const list = document.getElementById('presetList');
+            list.innerHTML = '';
+            
+            if (presets.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-light);">No saved presets yet</p>';
+                return;
+            }
+            
+            presets.forEach((preset, index) => {
+                const item = document.createElement('div');
+                item.className = 'preset-item';
+                item.innerHTML = `
+                    <span>${preset.name}</span>
+                    <div class="preset-item-actions">
+                        <button class="btn btn-secondary" onclick="loadPreset(${index})">Load</button>
+                        <button class="btn btn-secondary" onclick="deletePreset(${index})">Delete</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        window.loadPreset = function(index) {
+            const presets = JSON.parse(localStorage.getItem('waveformPresets') || '[]');
+            if (presets[index]) {
+                applySettings(presets[index].settings);
+                closeModal('presetsModal');
+                showStatus('Preset loaded!', 'success');
+                if (state.audioBuffer) generateWaveform();
+            }
+        };
+
+        window.deletePreset = function(index) {
+            if (!confirm('Delete this preset?')) return;
+            const presets = JSON.parse(localStorage.getItem('waveformPresets') || '[]');
+            presets.splice(index, 1);
+            localStorage.setItem('waveformPresets', JSON.stringify(presets));
+            loadPresetsList();
+            showStatus('Preset deleted', 'success');
+        };
+
+        function shareConfig() {
+            const settings = getCurrentSettings();
+            const encoded = btoa(JSON.stringify(settings));
+            const url = window.location.origin + window.location.pathname + '?config=' + encoded;
+            
+            navigator.clipboard.writeText(url).then(() => {
+                showStatus('Configuration URL copied to clipboard!', 'success');
+            }).catch(() => {
+                prompt('Copy this URL to share your configuration:', url);
+            });
+        }
+
+        function loadURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            const config = params.get('config');
+            
+            if (config) {
+                try {
+                    const settings = JSON.parse(atob(config));
+                    applySettings(settings);
+                    showStatus('Configuration loaded from URL!', 'success');
+                } catch (error) {
+                    console.error('Failed to load config from URL:', error);
+                }
+            }
+        }
+
+        function applyPreset(preset) {
+            const size = sizePresets[preset];
+            if (size) {
+                document.getElementById('width').value = size.width;
+                document.getElementById('height').value = size.height;
+                saveState();
+            }
+        }
+
+        function applySizePreset(preset) {
+            const size = sizePresets[preset];
+            if (size) {
+                document.getElementById('width').value = size.width;
+                document.getElementById('height').value = size.height;
+                showStatus(`Size set to ${size.width}x${size.height}`, 'success');
+                saveState();
+            }
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        function handleKeyboard(e) {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const modifier = isMac ? e.metaKey : e.ctrlKey;
+            
+            if (modifier && e.key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                undo();
+            } else if (modifier && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+                e.preventDefault();
+                redo();
+            } else if (modifier && e.key === 's') {
+                e.preventDefault();
+                if (!els.downloadBtn.disabled) downloadWaveform();
+            } else if (modifier && e.key === 'c') {
+                e.preventDefault();
+                if (!els.copyBtn.disabled) copyToClipboard();
+            } else if (e.key === ' ' && !e.target.matches('input, textarea')) {
+                e.preventDefault();
+                togglePlay();
+            } else if (e.key === 'g' && !e.target.matches('input, textarea')) {
+                e.preventDefault();
+                if (!els.generateBtn.disabled) generateWaveform();
+            } else if (e.key === 'd' && !e.target.matches('input, textarea')) {
+                e.preventDefault();
+                toggleDarkMode();
+            }
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+            if (modalId === 'presetsModal') {
+                loadPresetsList();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showStatus(message, type) {
+            els.status.textContent = message;
+            els.status.className = `status ${type}`;
+            els.status.style.display = 'block';
+            if (type === 'success') {
+                setTimeout(() => {
+                    els.status.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function loadSettings() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                els.darkModeBtn.textContent = '☀️';
+            }
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -623,4 +1729,94 @@
                     <label for="waveColor">Waveform Color</label>
                     <input type="color" id="waveColor" value="#667eea">
                 </div>
-                
+                <div class="control-group">
+                    <label for="bgColorMode">Background Mode</label>
+                    <select id="bgColorMode">
+                        <option value="solid">Solid</option>
+                        <option value="gradient">Gradient</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="bgColor">Background Color</label>
+                    <input type="color" id="bgColor" value="#ffffff">
+                </div>
+                <div class="control-group" id="bgGradientGroup" style="display: none;">
+                    <label for="bgColor2">Background Color 2</label>
+                    <input type="color" id="bgColor2" value="#f0f0f0">
+                </div>
+            </div>
+
+            <div id="customGradientControls" style="display: none; margin-bottom: 20px;">
+                <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--text-dark);">Custom Gradient Colors</h4>
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="gradColor1">Color 1</label>
+                        <input type="color" id="gradColor1" value="#667eea">
+                    </div>
+                    <div class="control-group">
+                        <label for="gradColor2">Color 2</label>
+                        <input type="color" id="gradColor2" value="#764ba2">
+                    </div>
+                    <div class="control-group">
+                        <label for="gradColor3">Color 3</label>
+                        <input type="color" id="gradColor3" value="#f093fb">
+                    </div>
+                    <div class="control-group">
+                        <label for="gradColor4">Color 4</label>
+                        <input type="color" id="gradColor4" value="#4facfe">
+                    </div>
+                    <div class="control-group">
+                        <label for="gradColor5">Color 5</label>
+                        <input type="color" id="gradColor5" value="#43e97b">
+                    </div>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="useColor3" checked>
+                    <label for="useColor3">Use Color 3</label>
+                    <input type="checkbox" id="useColor4">
+                    <label for="useColor4">Use Color 4</label>
+                    <input type="checkbox" id="useColor5">
+                    <label for="useColor5">Use Color 5</label>
+                </div>
+            </div>
+
+            <div class="gradient-preview" id="gradientPreview"></div>
+
+            <h3 style="margin: 20px 0 15px; color: var(--text-dark);">Dimensions</h3>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="width">Width (px)</label>
+                    <input type="number" id="width" value="1800" min="400" max="4000">
+                </div>
+                <div class="control-group">
+                    <label for="height">Height (px)</label>
+                    <input type="number" id="height" value="400" min="100" max="2000">
+                </div>
+            </div>
+
+            <h3 style="margin: 20px 0 15px; color: var(--text-dark);">Waveform Style</h3>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="style">Style</label>
+                    <select id="style">
+                        <option value="bars">Bars</option>
+                        <option value="line">Line</option>
+                        <option value="mirror">Mirror</option>
+                        <option value="roundedBars">Rounded Bars</option>
+                        <option value="filled">Filled Curve</option>
+                        <option value="particles">Particles</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="smoothing">Smoothing: <span id="smoothingValue">50</span></label>
+                    <input type="range" id="smoothing" min="10" max="200" value="50">
+                </div>
+                <div class="control-group">
+                    <label for="opacity">Opacity: <span id="opacityValue">100</span>%</label>
+                    <input type="range" id="opacity" min="0" max="100" value="100">
+                </div>
+                <div class="control-group">
+                    <label for="channels">Channels</label>
+                    <select id="channels">
+                        <option value="merged">Merged</option>
+                        <option value="separate">
