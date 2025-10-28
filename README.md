@@ -2,7 +2,7 @@
 
 A beautiful, free Progressive Web App (PWA) that generates stunning waveform images from your audio files. Create professional-looking visualizations with customizable colors, gradients, and styles.
 
-![Waveform Generator](https://img.shields.io/badge/PWA-Ready-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Waveform Generator](https://img.shields.io/badge/PWA-Ready-blue) ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
 ## ✨ Features
 
@@ -158,7 +158,21 @@ Contributions are welcome! Feel free to:
 
 ## 📄 License
 
-This project is licensed under the MIT License - feel free to use it for personal or commercial projects.
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
+
+This means you are free to:
+- ✅ Use this software for any purpose
+- ✅ Study and modify the source code
+- ✅ Share the software with others
+- ✅ Share your modifications
+
+**However, if you distribute modified versions, you must:**
+- 📋 Make your source code available under GPL-3.0
+- 📋 Include the original copyright notice
+- 📋 State any changes you made
+- 📋 Keep the same GPL-3.0 license
+
+For the full license text, see the [LICENSE](LICENSE) file or visit [GNU GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 ## 🙏 Acknowledgments
 
