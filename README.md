@@ -190,6 +190,6 @@ Found a bug? Have a feature request? Want to say thanks?
 
 ---
 
-**Made with 🎵 by [Your Name]**
+**Made with 🎵 and AI by Death259**
 
 [⬆ Back to Top](#-audio-waveform-generator)
