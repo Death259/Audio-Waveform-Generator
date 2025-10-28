@@ -1,21 +1,83 @@
-# 🎵 Audio Waveform Generator
+# 🎵 Audio Waveform Generator Pro
 
-A beautiful, free Progressive Web App (PWA) that generates stunning waveform images from your audio files. Create professional-looking visualizations with customizable colors, gradients, and styles.
+A beautiful, feature-rich Progressive Web App (PWA) that generates stunning waveform images from your audio files. Create professional-looking visualizations with extensive customization options, real-time audio playback, and powerful export capabilities.
 
 ![Waveform Generator](https://img.shields.io/badge/PWA-Ready-blue) ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
 ## ✨ Features
 
-- 📁 **Easy Upload** - Drag & drop or click to upload audio files
-- 🎨 **Multiple Color Modes** - Solid colors or beautiful gradients
-- 🌈 **Preset Gradients** - Rainbow, Sunset, Ocean, Red/White/Blue
-- 🎭 **Custom Gradients** - Create your own with up to 5 colors
-- 📊 **Three Waveform Styles** - Bars, Line, and Mirror
-- 💾 **High-Quality Export** - Download as PNG images up to 4000px wide
-- 📱 **Progressive Web App** - Install on your device like a native app
-- 🚀 **No Installation Required** - Works directly in your browser
-- 🔒 **Privacy First** - All processing happens locally in your browser
-- 🆓 **Completely Free** - No accounts, no subscriptions, no watermarks
+### 📁 **Audio Management**
+- **Easy Upload** - Drag & drop or click to upload audio files
+- **Multiple Format Support** - MP3, WAV, OGG, M4A, and more
+- **Sample Audio** - Try the app with built-in sample sounds (tone, sweep, beat)
+- **Audio Playback** - Listen to your audio while designing
+- **Timeline Scrubbing** - Seek to any position in your audio
+- **Audio Trimming** - Select specific sections to visualize
+
+### 🎨 **Extensive Customization**
+
+**Color Options:**
+- Solid colors or beautiful gradients
+- Preset gradients: Rainbow, Sunset, Ocean, Red/White/Blue
+- Custom gradients with up to 5 colors
+- Background gradients or solid colors
+- Real-time gradient preview
+
+**Waveform Styles:**
+- Bars
+- Line
+- Mirror
+- Rounded Bars
+- Filled Curve
+- Particles
+
+**Advanced Effects:**
+- Smoothing control
+- Opacity/transparency adjustment
+- Stroke/outline with color and width
+- Shadow effects with blur control
+- Channel selection (Merged, Separate, Left, Right)
+
+### 📐 **Dimension Presets**
+Quick presets for popular platforms:
+- 📱 Instagram Post (1080x1080)
+- 📱 Instagram Story (1080x1920)
+- 📺 YouTube Thumbnail (1280x720)
+- 🐦 Twitter Post (1200x675)
+- 📘 Facebook Cover (820x312)
+- 🎙️ Podcast Cover (3000x3000)
+- Custom dimensions (400-4000px width, 100-2000px height)
+
+### 💾 **Export Options**
+- **PNG** - High-quality raster images
+- **SVG** - Vector format for infinite scaling
+- **JPEG** - With adjustable quality
+- **Copy to Clipboard** - Quick sharing
+- **Batch Processing** - Multiple file support
+
+### 🔧 **Productivity Features**
+- **Undo/Redo** - Step through your changes (up to 50 steps)
+- **Save Presets** - Store your favorite configurations
+- **Load Presets** - Quick access to saved settings
+- **Share Configuration** - Generate shareable URLs with your settings
+- **Keyboard Shortcuts** - Work faster with hotkeys
+- **Dark Mode** - Easy on the eyes
+
+### 📱 **Progressive Web App**
+- Install on your device like a native app
+- Works offline after first visit
+- Full-screen experience
+- No app store required
+- Cross-platform (Android, iOS, Desktop)
+
+### ⌨️ **Keyboard Shortcuts**
+- **Ctrl/Cmd + Z** - Undo
+- **Ctrl/Cmd + Y** - Redo
+- **Ctrl/Cmd + S** - Download
+- **Ctrl/Cmd + C** - Copy to Clipboard
+- **Space** - Play/Pause Audio
+- **G** - Generate Waveform
+- **D** - Toggle Dark Mode
 
 ## 🎯 Supported Audio Formats
 
@@ -30,7 +92,7 @@ A beautiful, free Progressive Web App (PWA) that generates stunning waveform ima
 ### Online Version
 
 Simply visit the live app and start creating waveforms immediately:
-[https://death259.github.io/Audio-Waveform-Generator/]
+**[https://death259.github.io/Audio-Waveform-Generator/](https://death259.github.io/Audio-Waveform-Generator/)**
 
 ### Install as PWA (Recommended)
 
@@ -190,6 +252,6 @@ Found a bug? Have a feature request? Want to say thanks?
 
 ---
 
-**Made with 🎵 and AI by Death259**
+**Made with 🎵 by [Your Name]**
 
 [⬆ Back to Top](#-audio-waveform-generator)
