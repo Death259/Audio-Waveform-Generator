@@ -8,64 +8,154 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Waveform Generator">
-    <title>Audio Waveform Generator</title>
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkF1ZGlvIFdhdmVmb3JtIEdlbmVyYXRvciIsCiAgInNob3J0X25hbWUiOiAiV2F2ZWZvcm0iLAogICJkZXNjcmlwdGlvbiI6ICJHZW5lcmF0ZSBiZWF1dGlmdWwgd2F2ZWZvcm0gaW1hZ2VzIGZyb20gYXVkaW8gZmlsZXMiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiM2NjdlZWEiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0NzdmclMjB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnJTIwdmlld0JveD0nMCUyMDAlMjAxOTIlMjAxOTInJTNFJTNDZGVmcyUzRSUzQ2xpbmVhckdyYWRpZW50JTIwaWQ9J2cnJTIweDElM0QnMCUyNSclMjB5MSUzRCcwJTI1JyUyMHgyJTNEJzEwMCUyNSclMjB5MiUzRCcxMDAlMjUnJTNFJTNDc3RvcCUyMG9mZnNldD0nMCUyNSclMjBzdHlsZT0nc3RvcC1jb2xvcjolMjMlMjM2NjdlZWEnLyUzRSUzQ3N0b3AlMjBvZmZzZXQ9JzEwMCUyNSclMjBzdHlsZT0nc3RvcC1jb2xvcjolMjMlMjM3NjRiYTInLyUzRSUzQy9saW5lYXJHcmFkaWVudCUzRSUzQy9kZWZzJTNFJTNDcmVjdCUyMHdpZHRoJTNEJzE5MiclMjBoZWlnaHQlM0QnMTkyJyUyMGZpbGwlM0QndXJsKCUyM2cpJy8lM0UlM0N0ZXh0JTIweD0nOTYnJTIweT0nMTIwJyUyMGZvbnQtZmFtaWx5PSdBcmlhbCclMjBmb250LXNpemUlM0QnODAnJTIwZmlsbCUzRCclMjNmZmYnJTIwdGV4dC1hbmNob3IlM0QnbWlkZGxlJyUzRSVGMCU5RiU4RSVCNSUzQy90ZXh0JTNFJTNDL3N2ZyUzRSIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyUyMHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyclMjB2aWV3Qm94PScwJTIwMCUyMDUxMiUyMDUxMiclM0UlM0NkZWZzJTNFJTNDbGluZWFyR3JhZGllbnQlMjBpZD0nZyclMjB4MSUzRCcwJTI1JyUyMHkxJTNEJzAlMjUnJTIweDIlM0QnMTAwJTI1JyUyMHkyJTNEJzEwMCUyNSclM0UlM0NzdG9wJTIwb2Zmc2V0PSclMjAlMjUnJTIwc3R5bGU9J3N0b3AtY29sb3I6JTIzJTIzNjY3ZWVhJy8lM0UlM0NzdG9wJTIwb2Zmc2V0JTNEJzEwMCUyNSclMjBzdHlsZT0nc3RvcC1jb2xvcjolMjMlMjM3NjRiYTInLyUzRSUzQy9saW5lYXJHcmFkaWVudCUzRSUzQy9kZWZzJTNFJTNDcmVjdCUyMHdpZHRoJTNEJzUxMiclMjBoZWlnaHQlM0QnNTEyJyUyMGZpbGwlM0QndXJsKCUyM2cpJy8lM0UlM0N0ZXh0JTIweD0nMjU2JyUyMHklM0QnMzIwJyUyMGZvbnQtZmFtaWx5PSdBcmlhbCclMjBmb250LXNpemUlM0QnMjQwJyUyMGZpbGwlM0QnJTIzZmZmJyUyMHRleHQtYW5jaG9yJTNEJ21pZGRsZSclM0UlRjAlOUYlOEUlQjUlM0MvdGV4dCUzRSUzQy9zdmclM0UiLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiLAogICAgICAicHVycG9zZSI6ICJhbnkgbWFza2FibGUiCiAgICB9CiAgXQp9">
+    <title>Audio Waveform Generator Pro</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkF1ZGlvIFdhdmVmb3JtIEdlbmVyYXRvciIsCiAgInNob3J0X25hbWUiOiAiV2F2ZWZvcm0iLAogICJkZXNjcmlwdGlvbiI6ICJHZW5lcmF0ZSBiZWF1dGlmdWwgd2F2ZWZvcm0gaW1hZ2VzIGZyb20gYXVkaW8gZmlsZXMiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiM2NjdlZWEiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0NzdmclMjB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnJTIwdmlld0JveD0nMCUyMDAlMjAxOTIlMjAxOTInJTNFJTNDZGVmcyUzRSUzQ2xpbmVhckdyYWRpZW50JTIwaWQ9J2cnJTIweDElM0QnMCUyNSclMjB5MSUzRCcwJTI1JyUyMHgyJTNEJzEwMCUyNSclMjB5MiUzRCcxMDAlMjUnJTNFJTNDc3RvcCUyMG9mZnNldD0nMCUyNSclMjBzdHlsZT0nc3RvcC1jb2xvcjolMjMlMjM2NjdlZWEnLyUzRSUzQ3N0b3AlMjBvZmZzZXQ9JzEwMCUyNSclMjBzdHlsZT0nc3RvcC1jb2xvcjolMjMlMjM3NjRiYTInLyUzRSUzQy9saW5lYXJHcmFkaWVudCUzRSUzQy9kZWZzJTNFJTNDcmVjdCUyMHdpZHRoJTNEJzE5MiclMjBoZWlnaHQlM0QnMTkyJyUyMGZpbGwlM0QndXJsKCUyM2cpJy8lM0UlM0N0ZXh0JTIweD0nOTYnJTIweT0nMTIwJyUyMGZvbnQtZmFtaWx5PSdBcmlhbCclMjBmb250LXNpemUlM0QnODAnJTIwZmlsbCUzRCclMjNmZmYnJTIwdGV4dC1hbmNob3IlM0QnbWlkZGxlJyUzRSVGMCU5RiU4RSVCNSUzQy90ZXh0JTNFJTNDL3N2ZyUzRQ==",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0%25'%20y1='0%25'%20x2='100%25'%20y2='100%25'%3E%3Cstop%20offset='%200%25'%20style='stop-color:%23%23667eea'/%3E%3Cstop%20offset%3D'100%25'%20style='stop-color:%23%23764ba2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D'512'%20height%3D'512'%20fill%3D'url(%23g)'/%3E%3Ctext%20x%3D'256'%20y%3D'320'%20font-family%3D'Arial'%20font-size%3D'240'%20fill%3D'%23fff'%20text-anchor%3D'middle'%3E%F0%9F%8E%B5%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
+        :root {
+            --bg-primary: #667eea;
+            --bg-secondary: #764ba2;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #e0e0e0;
+            --success: #d4edda;
+            --error: #f8d7da;
+            --canvas-bg: #f5f5f5;
+        }
+        
+        body.dark-mode {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --text-dark: #eee;
+            --text-light: #aaa;
+            --border-color: #333;
+            --success: #1e4620;
+            --error: #4a1e1e;
+            --canvas-bg: #2a2a2a;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
+            transition: all 0.3s;
         }
+        
         .container {
             background: white;
             border-radius: 16px;
-            padding: 40px;
-            max-width: 900px;
-            width: 100%;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
+        
+        body.dark-mode .container {
+            background: #1e1e1e;
+            color: var(--text-dark);
         }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        h1 {
+            color: var(--text-dark);
+            font-size: 28px;
+            margin: 0;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .icon-btn {
+            background: var(--border-color);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        
+        .icon-btn:hover {
+            transform: translateY(-2px);
+            background: #ccc;
+        }
+        
+        body.dark-mode .icon-btn {
+            background: #333;
+        }
+        
+        body.dark-mode .icon-btn:hover {
+            background: #444;
+        }
+        
         .subtitle {
-            color: #666;
-            margin-bottom: 30px;
+            color: var(--text-light);
+            margin-bottom: 20px;
             font-size: 14px;
         }
-        .install-prompt {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
             margin-bottom: 20px;
-            display: none;
-            align-items: center;
-            justify-content: space-between;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
         }
-        .install-prompt button {
-            background: white;
-            color: #667eea;
+        
+        .tab {
+            padding: 10px 20px;
+            background: none;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
             cursor: pointer;
-            margin-left: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
         }
-        .install-prompt button:hover {
-            background: #f0f0f0;
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
         }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
         .upload-area {
             border: 3px dashed #667eea;
             border-radius: 12px;
@@ -73,91 +163,231 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
+        
         .upload-area:hover {
-            background: #f8f9ff;
-            border-color: #764ba2;
+            background: rgba(102, 126, 234, 0.1);
         }
+        
         .upload-area.dragover {
-            background: #f0f0ff;
+            background: rgba(102, 126, 234, 0.2);
             border-color: #764ba2;
         }
-        .upload-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
+        
         input[type="file"] {
             display: none;
         }
-        .controls {
+        
+        .audio-player {
+            background: var(--canvas-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .play-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .timeline {
+            flex: 1;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .timeline-progress {
+            height: 100%;
+            background: #667eea;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s;
+        }
+        
+        .time-display {
+            font-size: 12px;
+            color: var(--text-light);
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        .trim-controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .trim-controls input[type="number"] {
+            width: 80px;
+        }
+        
+        .controls-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
+        
         .control-group {
             display: flex;
             flex-direction: column;
         }
+        
         label {
             font-size: 13px;
             font-weight: 600;
-            color: #555;
+            color: var(--text-dark);
             margin-bottom: 8px;
         }
+        
         input[type="color"],
         input[type="number"],
+        input[type="range"],
         select {
             padding: 10px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 14px;
-            transition: border 0.3s;
+            background: white;
+            color: var(--text-dark);
         }
+        
+        body.dark-mode input[type="number"],
+        body.dark-mode select {
+            background: #2a2a2a;
+        }
+        
         input[type="color"] {
             height: 45px;
             cursor: pointer;
         }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
+        
+        input[type="range"] {
+            padding: 0;
+            height: 30px;
         }
+        
+        .gradient-preview {
+            height: 40px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        body.dark-mode .preset-btn {
+            background: #2a2a2a;
+            color: var(--text-dark);
+        }
+        
+        .preset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .preset-btn.active {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
         .canvas-container {
-            background: #f5f5f5;
+            background: var(--canvas-bg);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
             display: none;
         }
+        
         canvas {
             width: 100%;
             display: block;
             border-radius: 8px;
         }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
         .btn {
-            padding: 14px 28px;
+            padding: 14px 20px;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            width: 100%;
         }
+        
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-dark);
         }
-        .btn-primary:disabled {
+        
+        body.dark-mode .btn-secondary {
+            background: #333;
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
+        
         .status {
             text-align: center;
             padding: 12px;
@@ -166,18 +396,57 @@
             display: none;
             font-size: 14px;
         }
+        
         .status.success {
-            background: #d4edda;
+            background: var(--success);
             color: #155724;
         }
+        
         .status.error {
-            background: #f8d7da;
+            background: var(--error);
             color: #721c24;
         }
+        
         .status.processing {
             background: #d1ecf1;
             color: #0c5460;
         }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .sample-audio {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .sample-btn {
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .sample-btn:hover {
+            background: #764ba2;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -185,403 +454,263 @@
             h1 {
                 font-size: 24px;
             }
-            .controls {
+            .controls-grid {
                 grid-template-columns: 1fr;
             }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        body.dark-mode .modal-content {
+            background: #1e1e1e;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+        
+        .preset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .preset-item {
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preset-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .preset-item-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .preset-item-actions button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="install-prompt" id="installPrompt">
-            <span>📱 Install this app on your device for easy access!</span>
-            <button id="installBtn">Install</button>
-        </div>
-
-        <h1>🎵 Audio Waveform Generator</h1>
-        <p class="subtitle">Upload an audio file to generate a waveform image</p>
-        
-        <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">📁</div>
-            <p><strong>Click to upload</strong> or drag and drop</p>
-            <p style="font-size: 12px; color: #999; margin-top: 8px;">MP3, WAV, OGG, M4A supported</p>
-            <input type="file" id="audioFile" accept="audio/*">
-        </div>
-
-        <div class="status" id="status"></div>
-
-        <div class="controls">
-            <div class="control-group">
-                <label for="colorMode">Color Mode</label>
-                <select id="colorMode">
-                    <option value="solid">Solid Color</option>
-                    <option value="rainbow">Rainbow Gradient</option>
-                    <option value="redwhiteblue">Red/White/Blue</option>
-                    <option value="sunset">Sunset</option>
-                    <option value="ocean">Ocean</option>
-                    <option value="custom">Custom Gradient</option>
-                </select>
+        <div class="header">
+            <div>
+                <h1>🎵 Audio Waveform Generator Pro</h1>
+                <p class="subtitle">Create stunning waveform visualizations</p>
             </div>
-            <div class="control-group" id="solidColorGroup">
-                <label for="waveColor">Waveform Color</label>
-                <input type="color" id="waveColor" value="#667eea">
-            </div>
-            <div class="control-group">
-                <label for="bgColor">Background Color</label>
-                <input type="color" id="bgColor" value="#ffffff">
-            </div>
-            <div class="control-group">
-                <label for="width">Width (px)</label>
-                <input type="number" id="width" value="1800" min="400" max="4000">
-            </div>
-            <div class="control-group">
-                <label for="height">Height (px)</label>
-                <input type="number" id="height" value="400" min="100" max="2000">
-            </div>
-            <div class="control-group">
-                <label for="style">Waveform Style</label>
-                <select id="style">
-                    <option value="bars">Bars</option>
-                    <option value="line">Line</option>
-                    <option value="mirror">Mirror</option>
-                </select>
+            <div class="header-controls">
+                <button class="icon-btn" id="darkModeBtn" title="Toggle Dark Mode">🌙</button>
+                <button class="icon-btn" id="undoBtn" title="Undo (Ctrl+Z)" disabled>↶</button>
+                <button class="icon-btn" id="redoBtn" title="Redo (Ctrl+Y)" disabled>↷</button>
+                <button class="icon-btn" id="presetsBtn" title="Presets">💾</button>
+                <button class="icon-btn" id="helpBtn" title="Keyboard Shortcuts">⌨️</button>
             </div>
         </div>
 
-        <div id="customGradientControls" style="display: none; margin-bottom: 30px;">
-            <h3 style="font-size: 16px; margin-bottom: 15px; color: #333;">Custom Gradient Colors</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-                <div class="control-group">
-                    <label for="gradColor1">Color 1</label>
-                    <input type="color" id="gradColor1" value="#667eea">
-                </div>
-                <div class="control-group">
-                    <label for="gradColor2">Color 2</label>
-                    <input type="color" id="gradColor2" value="#764ba2">
-                </div>
-                <div class="control-group">
-                    <label for="gradColor3">Color 3 (optional)</label>
-                    <input type="color" id="gradColor3" value="#f093fb">
-                </div>
-                <div class="control-group">
-                    <label for="gradColor4">Color 4 (optional)</label>
-                    <input type="color" id="gradColor4" value="#4facfe">
-                </div>
-                <div class="control-group">
-                    <label for="gradColor5">Color 5 (optional)</label>
-                    <input type="color" id="gradColor5" value="#43e97b">
-                </div>
+        <div class="tabs">
+            <button class="tab active" data-tab="upload">📁 Upload</button>
+            <button class="tab" data-tab="customize">🎨 Customize</button>
+            <button class="tab" data-tab="export">💾 Export</button>
+        </div>
+
+        <div class="tab-content active" id="upload-tab">
+            <div class="sample-audio">
+                <strong style="width: 100%; color: var(--text-dark);">Try with sample audio:</strong>
+                <button class="sample-btn" data-sample="tone">🎵 Tone</button>
+                <button class="sample-btn" data-sample="sweep">📊 Sweep</button>
+                <button class="sample-btn" data-sample="drums">🥁 Beat</button>
             </div>
-            <div style="margin-top: 10px;">
-                <label style="display: flex; align-items: center; font-size: 13px; cursor: pointer;">
-                    <input type="checkbox" id="useColor3" style="margin-right: 8px;" checked>
-                    Use Color 3
-                </label>
-                <label style="display: flex; align-items: center; font-size: 13px; cursor: pointer;">
-                    <input type="checkbox" id="useColor4" style="margin-right: 8px;">
-                    Use Color 4
-                </label>
-                <label style="display: flex; align-items: center; font-size: 13px; cursor: pointer;">
-                    <input type="checkbox" id="useColor5" style="margin-right: 8px;">
-                    Use Color 5
-                </label>
+            
+            <div class="upload-area" id="uploadArea">
+                <div style="font-size: 48px; margin-bottom: 10px;">📁</div>
+                <p><strong>Click to upload</strong> or drag and drop</p>
+                <p style="font-size: 12px; color: #999; margin-top: 8px;">MP3, WAV, OGG, M4A supported | Multiple files supported</p>
+                <input type="file" id="audioFile" accept="audio/*" multiple>
+            </div>
+
+            <div class="audio-player" id="audioPlayer">
+                <div class="player-controls">
+                    <button class="play-btn" id="playBtn">▶</button>
+                    <div class="timeline" id="timeline">
+                        <div class="timeline-progress" id="timelineProgress"></div>
+                    </div>
+                    <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
+                </div>
+                <div class="trim-controls">
+                    <label>
+                        Trim Start (s):
+                        <input type="number" id="trimStart" value="0" min="0" step="0.1">
+                    </label>
+                    <label>
+                        Trim End (s):
+                        <input type="number" id="trimEnd" value="0" min="0" step="0.1">
+                    </label>
+                    <button class="btn btn-secondary" id="applyTrim">Apply Trim</button>
+                </div>
             </div>
         </div>
 
-        <div class="canvas-container" id="canvasContainer">
-            <canvas id="waveformCanvas"></canvas>
-        </div>
+        <div class="tab-content" id="customize-tab">
+            <h3 style="margin-bottom: 15px; color: var(--text-dark);">Quick Presets</h3>
+            <div class="preset-buttons">
+                <button class="preset-btn" data-preset="instagram">📱 Instagram</button>
+                <button class="preset-btn" data-preset="youtube">📺 YouTube</button>
+                <button class="preset-btn" data-preset="twitter">🐦 Twitter</button>
+                <button class="preset-btn" data-preset="podcast">🎙️ Podcast</button>
+                <button class="preset-btn" data-preset="square">⬜ Square</button>
+                <button class="preset-btn" data-preset="wide">📺 Wide</button>
+            </div>
 
-        <button class="btn btn-primary" id="downloadBtn" disabled>Download Waveform Image</button>
-    </div>
+            <h3 style="margin-bottom: 15px; color: var(--text-dark);">Appearance</h3>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="colorMode">Color Mode</label>
+                    <select id="colorMode">
+                        <option value="solid">Solid Color</option>
+                        <option value="rainbow">Rainbow Gradient</option>
+                        <option value="redwhiteblue">Red/White/Blue</option>
+                        <option value="sunset">Sunset</option>
+                        <option value="ocean">Ocean</option>
+                        <option value="custom">Custom Gradient</option>
+                    </select>
+                </div>
+                <div class="control-group" id="solidColorGroup">
+                    <label for="waveColor">Waveform Color</label>
+                    <input type="color" id="waveColor" value="#667eea">
+                </div>
+                <div class="control-group">
+                    <label for="bgColorMode">Background Mode</label>
+                    <select id="bgColorMode">
+                        <option value="solid">Solid</option>
+                        <option value="gradient">Gradient</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="bgColor">Background Color</label>
+                    <input type="color" id="bgColor" value="#ffffff">
+                </div>
+                <div class="control-group" id="bgGradientGroup" style="display: none;">
+                    <label for="bgColor2">Background Color 2</label>
+                    <input type="color" id="bgColor2" value="#f0f0f0">
+                </div>
+            </div>
 
-    <script>
-        // Register Service Worker for PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    self.addEventListener('install', (e) => {
-                        e.waitUntil(
-                            caches.open('waveform-v1').then((cache) => {
-                                return cache.addAll(['/']);
-                            })
-                        );
-                    });
-                    self.addEventListener('fetch', (e) => {
-                        e.respondWith(
-                            caches.match(e.request).then((response) => {
-                                return response || fetch(e.request);
-                            })
-                        );
-                    });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl);
-            });
-        }
+            <div id="customGradientControls" style="display: none; margin-bottom: 20px;">
+                <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--text-dark);">Custom Gradient Colors</h4>
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="gradColor1">Color 1</label>
+                        <input type="color" id="gradColor1" value="#667eea">
+                    </div>
+                    <div class="control-group">
+                        <label for="gradColor2">Color 2</label>
+                        <input type="color" id="gradColor2" value="#764ba2">
+                    </div>
+                    <div class="control-group">
+                        <label for="gradColor3">Color 3</label>
+                        <input type="color" id="gradColor3" value="#f093fb">
+                    </div>
+                    <div class="control-group">
+                        <label for="gradColor4">Color 4</label>
+                        <input type="color" id="gradColor4" value="#4facfe">
+                    </div>
+                    <div class="control-group">
+                        <label for="gradColor5">Color 5</label>
+                        <input type="color" id="gradColor5" value="#43e97b">
+                    </div>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="useColor3" checked>
+                    <label for="useColor3">Use Color 3</label>
+                    <input type="checkbox" id="useColor4">
+                    <label for="useColor4">Use Color 4</label>
+                    <input type="checkbox" id="useColor5">
+                    <label for="useColor5">Use Color 5</label>
+                </div>
+            </div>
 
-        // PWA Install Prompt
-        let deferredPrompt;
-        const installPrompt = document.getElementById('installPrompt');
-        const installBtn = document.getElementById('installBtn');
+            <div class="gradient-preview" id="gradientPreview"></div>
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installPrompt.style.display = 'flex';
-        });
+            <h3 style="margin: 20px 0 15px; color: var(--text-dark);">Dimensions</h3>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="width">Width (px)</label>
+                    <input type="number" id="width" value="1800" min="400" max="4000">
+                </div>
+                <div class="control-group">
+                    <label for="height">Height (px)</label>
+                    <input type="number" id="height" value="400" min="100" max="2000">
+                </div>
+            </div>
 
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installPrompt.style.display = 'none';
-            }
-        });
-
-        window.addEventListener('appinstalled', () => {
-            installPrompt.style.display = 'none';
-        });
-
-        // Main App Code
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('audioFile');
-        const canvas = document.getElementById('waveformCanvas');
-        const ctx = canvas.getContext('2d');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const canvasContainer = document.getElementById('canvasContainer');
-        const status = document.getElementById('status');
-        
-        const colorModeInput = document.getElementById('colorMode');
-        const waveColorInput = document.getElementById('waveColor');
-        const bgColorInput = document.getElementById('bgColor');
-        const widthInput = document.getElementById('width');
-        const heightInput = document.getElementById('height');
-        const styleInput = document.getElementById('style');
-        const solidColorGroup = document.getElementById('solidColorGroup');
-        const customGradientControls = document.getElementById('customGradientControls');
-        
-        const gradColor1 = document.getElementById('gradColor1');
-        const gradColor2 = document.getElementById('gradColor2');
-        const gradColor3 = document.getElementById('gradColor3');
-        const gradColor4 = document.getElementById('gradColor4');
-        const gradColor5 = document.getElementById('gradColor5');
-        const useColor3 = document.getElementById('useColor3');
-        const useColor4 = document.getElementById('useColor4');
-        const useColor5 = document.getElementById('useColor5');
-
-        let audioBuffer = null;
-
-        // Preset gradients
-        const presetGradients = {
-            rainbow: ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#9400d3'],
-            redwhiteblue: ['#b22234', '#ffffff', '#3c3b6e'],
-            sunset: ['#ff6b6b', '#feca57', '#ff9ff3', '#54a0ff'],
-            ocean: ['#667eea', '#764ba2', '#f093fb', '#4facfe']
-        };
-
-        // Show/hide controls based on color mode
-        colorModeInput.addEventListener('change', () => {
-            const mode = colorModeInput.value;
-            solidColorGroup.style.display = mode === 'solid' ? 'flex' : 'none';
-            customGradientControls.style.display = mode === 'custom' ? 'block' : 'none';
-            if (audioBuffer) drawWaveform();
-        });
-
-        // Listen for control changes to redraw
-        [waveColorInput, bgColorInput, widthInput, heightInput, styleInput, colorModeInput,
-         gradColor1, gradColor2, gradColor3, gradColor4, gradColor5,
-         useColor3, useColor4, useColor5].forEach(input => {
-            input.addEventListener('change', () => {
-                if (audioBuffer) drawWaveform();
-            });
-        });
-
-        function getGradientColors() {
-            const mode = colorModeInput.value;
-            
-            if (mode === 'solid') {
-                return null;
-            } else if (presetGradients[mode]) {
-                return presetGradients[mode];
-            } else if (mode === 'custom') {
-                const colors = [gradColor1.value, gradColor2.value];
-                if (useColor3.checked) colors.push(gradColor3.value);
-                if (useColor4.checked) colors.push(gradColor4.value);
-                if (useColor5.checked) colors.push(gradColor5.value);
-                return colors;
-            }
-            return null;
-        }
-
-        function createGradient(width, height, colors, isVertical = false) {
-            const gradient = isVertical 
-                ? ctx.createLinearGradient(0, 0, 0, height)
-                : ctx.createLinearGradient(0, 0, width, 0);
-            
-            colors.forEach((color, i) => {
-                gradient.addColorStop(i / (colors.length - 1), color);
-            });
-            
-            return gradient;
-        }
-
-        // Upload area interactions
-        uploadArea.addEventListener('click', () => fileInput.click());
-        
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-        
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-        
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFile(files[0]);
-            }
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
-            }
-        });
-
-        function showStatus(message, type) {
-            status.textContent = message;
-            status.className = `status ${type}`;
-            status.style.display = 'block';
-            if (type === 'success') {
-                setTimeout(() => {
-                    status.style.display = 'none';
-                }, 3000);
-            }
-        }
-
-        async function handleFile(file) {
-            if (!file.type.startsWith('audio/')) {
-                showStatus('Please upload a valid audio file', 'error');
-                return;
-            }
-
-            showStatus('Processing audio file...', 'processing');
-            
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const arrayBuffer = await file.arrayBuffer();
-                audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                
-                showStatus('Audio loaded successfully!', 'success');
-                drawWaveform();
-            } catch (error) {
-                showStatus('Error processing audio file: ' + error.message, 'error');
-                console.error(error);
-            }
-        }
-
-        function drawWaveform() {
-            const width = parseInt(widthInput.value);
-            const height = parseInt(heightInput.value);
-            const waveColor = waveColorInput.value;
-            const bgColor = bgColorInput.value;
-            const style = styleInput.value;
-
-            canvas.width = width;
-            canvas.height = height;
-
-            // Fill background
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, width, height);
-
-            // Get audio data
-            const rawData = audioBuffer.getChannelData(0);
-            const samples = width;
-            const blockSize = Math.floor(rawData.length / samples);
-            const filteredData = [];
-
-            for (let i = 0; i < samples; i++) {
-                let sum = 0;
-                for (let j = 0; j < blockSize; j++) {
-                    sum += Math.abs(rawData[i * blockSize + j]);
-                }
-                filteredData.push(sum / blockSize);
-            }
-
-            // Normalize
-            const max = Math.max(...filteredData);
-            const normalizedData = filteredData.map(v => v / max);
-
-            // Get gradient colors or solid color
-            const gradientColors = getGradientColors();
-            
-            ctx.lineWidth = 2;
-
-            if (style === 'bars') {
-                const barWidth = Math.max(width / samples, 1);
-                // Set color once for bars
-                if (gradientColors) {
-                    ctx.fillStyle = createGradient(width, height, gradientColors);
-                } else {
-                    ctx.fillStyle = waveColor;
-                }
-                
-                for (let i = 0; i < samples; i++) {
-                    const barHeight = normalizedData[i] * height * 0.8;
-                    const x = i * barWidth;
-                    const y = (height - barHeight) / 2;
-                    ctx.fillRect(x, y, Math.ceil(barWidth), barHeight);
-                }
-            } else if (style === 'line') {
-                if (gradientColors) {
-                    ctx.strokeStyle = createGradient(width, height, gradientColors);
-                } else {
-                    ctx.strokeStyle = waveColor;
-                }
-                
-                ctx.beginPath();
-                for (let i = 0; i < samples; i++) {
-                    const x = (i / samples) * width;
-                    const y = height / 2 + (normalizedData[i] * height * 0.4) * (i % 2 ? 1 : -1);
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                }
-                ctx.stroke();
-            } else if (style === 'mirror') {
-                const barWidth = Math.max(width / samples, 1);
-                // Set color once for mirror
-                if (gradientColors) {
-                    ctx.fillStyle = createGradient(width, height, gradientColors);
-                } else {
-                    ctx.fillStyle = waveColor;
-                }
-                
-                for (let i = 0; i < samples; i++) {
-                    const barHeight = normalizedData[i] * height * 0.4;
-                    const x = i * barWidth;
-                    ctx.fillRect(x, height / 2, Math.ceil(barWidth), barHeight);
-                    ctx.fillRect(x, height / 2 - barHeight, Math.ceil(barWidth), barHeight);
-                }
-            }
-
-            canvasContainer.style.display = 'block';
-            downloadBtn.disabled = false;
-        }
-
-        downloadBtn.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = 'waveform.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            showStatus('Waveform image downloaded!', 'success');
-        });
-    </script>
-</body>
-</html>
+            <h3 style="margin: 20px 0 15px; color: var(--text-dark);">Waveform Style</h3>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="style">Style</label>
+                    <select id="style">
+                        <option value="bars">Bars</option>
+                        <option value="line">Line</option>
+                        <option value="mirror">Mirror</option>
+                        <option value="roundedBars">Rounded Bars</option>
+                        <option value="filled">Filled Curve</option>
+                        <option value="particles">Particles</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="smoothing">Smoothing: <span id="smoothingValue">50</span></label>
+                    <input type="range" id="smoothing" min="10" max="200" value="50">
+                </div>
+                <div class="control-group">
+                    <label for="opacity">Opacity: <span id="opacityValue">100</span>%</label>
+                    <input type="range" id="opacity" min="0" max="100" value="100">
+                </div>
+                <div class="control-group">
+                    <label for="channels">Channels</label>
+                    <select id="channels">
+                        <option value="merged">Merged</option>
+                        <option value="separate">
