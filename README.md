@@ -1,6 +1,6 @@
 # 🎵 Audio Waveform Generator Pro
 
-A beautiful, feature-rich Progressive Web App (PWA) that generates stunning waveform images from your audio files. Create professional-looking visualizations with extensive customization options, real-time audio playback, and powerful export capabilities.
+A beautiful, feature-rich Progressive Web App (PWA) that generates stunning waveform images from your audio files. Create professional-looking visualizations with extensive customization options and powerful export capabilities.
 
 ![Waveform Generator](https://img.shields.io/badge/PWA-Ready-blue) ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -9,59 +9,40 @@ A beautiful, feature-rich Progressive Web App (PWA) that generates stunning wave
 ### 📁 **Audio Management**
 - **Easy Upload** - Drag & drop or click to upload audio files
 - **Multiple Format Support** - MP3, WAV, OGG, M4A, and more
-- **Sample Audio** - Try the app with built-in sample sounds (tone, sweep, beat)
-- **Audio Playback** - Listen to your audio while designing
-- **Timeline Scrubbing** - Seek to any position in your audio
-- **Audio Trimming** - Select specific sections to visualize
+- **Instant Processing** - Fast audio analysis and visualization
 
 ### 🎨 **Extensive Customization**
 
 **Color Options:**
-- Solid colors or beautiful gradients
+- Solid colors
 - Preset gradients: Rainbow, Sunset, Ocean, Red/White/Blue
-- Custom gradients with up to 5 colors
-- Background gradients or solid colors
+- Custom gradients with 2-5 colors and smooth transitions
 - Real-time gradient preview
 
 **Waveform Styles:**
-- Bars
-- Line
-- Mirror
-- Rounded Bars
-- Filled Curve
-- Particles
+- **Bars** - Classic vertical bars centered in the waveform
+- **Rounded Bars** - Smooth bars with rounded corners
+- **Line** - Symmetrical wave pattern (top and bottom)
+- **Mirror** - Bars extending up and down from center
+- **Filled** - Smooth filled area under the waveform
+- **Particles** - Dotted particle-based visualization
 
-**Advanced Effects:**
-- Smoothing control
-- Opacity/transparency adjustment
-- Stroke/outline with color and width
-- Shadow effects with blur control
-- Channel selection (Merged, Separate, Left, Right)
-
-### 📐 **Dimension Presets**
-Quick presets for popular platforms:
-- 📱 Instagram Post (1080x1080)
-- 📱 Instagram Story (1080x1920)
-- 📺 YouTube Thumbnail (1280x720)
-- 🐦 Twitter Post (1200x675)
-- 📘 Facebook Cover (820x312)
-- 🎙️ Podcast Cover (3000x3000)
-- Custom dimensions (400-4000px width, 100-2000px height)
-
-### 💾 **Export Options**
-- **PNG** - High-quality raster images
-- **SVG** - Vector format for infinite scaling
-- **JPEG** - With adjustable quality
-- **Copy to Clipboard** - Quick sharing
-- **Batch Processing** - Multiple file support
+**Advanced Controls:**
+- **Smoothing** - Control waveform detail level (10-200)
+- **Opacity** - Adjust transparency (0-100%)
+- **Custom Dimensions** - Width: 400-4000px, Height: 100-2000px
+- **Background Color** - Any solid color
 
 ### 🔧 **Productivity Features**
-- **Undo/Redo** - Step through your changes (up to 50 steps)
-- **Save Presets** - Store your favorite configurations
-- **Load Presets** - Quick access to saved settings
-- **Share Configuration** - Generate shareable URLs with your settings
+- **Undo/Redo** - Step through your changes (up to 50 history states)
 - **Keyboard Shortcuts** - Work faster with hotkeys
-- **Dark Mode** - Easy on the eyes
+- **Dark Mode** - Easy on the eyes for low-light environments
+- **Auto-save Settings** - Your preferences persist across sessions
+
+### 💾 **Export**
+- **PNG Export** - High-quality raster images
+- **One-Click Download** - Save directly to your device
+- **Copy to Clipboard** - Quick sharing (coming soon)
 
 ### 📱 **Progressive Web App**
 - Install on your device like a native app
@@ -73,10 +54,6 @@ Quick presets for popular platforms:
 ### ⌨️ **Keyboard Shortcuts**
 - **Ctrl/Cmd + Z** - Undo
 - **Ctrl/Cmd + Y** - Redo
-- **Ctrl/Cmd + S** - Download
-- **Ctrl/Cmd + C** - Copy to Clipboard
-- **Space** - Play/Pause Audio
-- **G** - Generate Waveform
 - **D** - Toggle Dark Mode
 
 ## 🎯 Supported Audio Formats
@@ -116,49 +93,35 @@ Simply visit the live app and start creating waveforms immediately:
 
 ## 🎨 How to Use
 
-### 1. Upload Audio (📁 Tab)
-   - **Option A**: Click the upload area or drag & drop your audio file
-   - **Option B**: Try sample audio (tone, sweep, or beat)
+1. **Upload Audio**
+   - Click the upload area or drag & drop your audio file
    - Wait for processing (usually just a few seconds)
-   - Use the audio player to preview and trim if needed
 
-### 2. Customize Your Waveform (🎨 Tab)
-   - **Quick Presets**: Instagram, YouTube, Twitter, Podcast, Square, Wide
-   - **Color Mode**: Choose solid, gradient presets, or custom gradient
-   - **Background**: Solid color or gradient background
-   - **Dimensions**: Set custom width and height or use quick presets
-   - **Waveform Style**: Bars, Line, Mirror, Rounded Bars, Filled Curve, or Particles
-   - **Smoothing**: Control detail level (10-200)
+2. **Customize Your Waveform**
+   - **Color Mode**: Choose solid color or gradient presets (Rainbow, Sunset, Ocean, Red/White/Blue)
+   - **Custom Gradient**: Pick 2-5 colors with checkboxes to enable/disable colors 3-5
+   - **Background Color**: Set any solid background color
+   - **Dimensions**: Adjust width (400-4000px) and height (100-2000px)
+   - **Waveform Style**: Select from 6 different styles
+   - **Smoothing**: Control detail (10 = very detailed, 200 = very smooth)
    - **Opacity**: Adjust transparency (0-100%)
-   - **Channels**: Merged, Separate, Left Only, or Right Only
-   - **Effects**: Enable stroke/outline and shadow effects
 
-### 3. Generate & Export (💾 Tab)
+3. **Generate & Download**
    - Click "🎨 Generate Waveform" to create your visualization
-   - **Export Format**: Choose PNG, SVG, or JPEG
-   - **Quick Size Presets**: Instagram Post/Story, YouTube, Twitter, Facebook
-   - **Download**: Save to your device
-   - **Copy to Clipboard**: Quick sharing
-   - **Save as Preset**: Store your settings for later
-   - **Share Config**: Generate a URL to share your exact settings
-
-### 4. Advanced Features
-   - **Undo/Redo**: Step through changes with buttons or Ctrl+Z/Ctrl+Y
-   - **Dark Mode**: Toggle with 🌙 button or press D
-   - **Keyboard Shortcuts**: See help menu (⌨️ button) for all shortcuts
-   - **Audio Trimming**: Set start/end times to visualize specific sections
-   - **Presets**: Save and load your favorite configurations
+   - Click "💾 Download PNG" to save to your device
+   - Use Undo/Redo buttons to step through changes
+   - Toggle Dark Mode for comfortable viewing in any lighting
 
 ## 🎨 Waveform Styles
 
-- **Bars** - Classic vertical bars
-- **Line** - Continuous waveform line
-- **Mirror** - Symmetrical top and bottom reflection
-- **Rounded Bars** - Bars with rounded corners for a softer look
-- **Filled Curve** - Smooth filled area under the waveform
-- **Particles** - Dotted particle-based visualization
+- **Bars** - Classic vertical bars centered in the waveform
+- **Rounded Bars** - Bars with smooth rounded corners for a softer look
+- **Line** - Symmetrical continuous waveform (top and bottom mirrored)
+- **Mirror** - Bars extending up and down from the center line
+- **Filled** - Smooth filled area under the waveform curve
+- **Particles** - Dotted particle-based visualization for a unique look
 
-## 🎨 Gradient Presets
+## 🎨 Color Options
 
 - **Solid** - Single color waveform
 - **Rainbow** - Classic 7-color rainbow spectrum
@@ -173,35 +136,35 @@ Simply visit the live app and start creating waveforms immediately:
 - **Aspect Ratio**: Wide aspect ratios (3:1 or 4:1) work best for most waveforms
 - **Contrast**: Ensure good contrast between waveform and background colors
 - **Smoothing**: Lower values (10-30) for detailed waveforms, higher (100-200) for smooth, minimalist designs
-- **Trimming**: Use audio trimming to focus on the most interesting parts of your track
-- **Channels**: Use "Separate" for stereo visualization, "Merged" for mono appearance
-- **Effects**: Subtle shadows (5-10px blur) add depth without overwhelming
-- **Presets**: Save your favorite settings to speed up future projects
+- **Style Selection**: 
+  - Use **Bars** or **Rounded Bars** for classic podcast/music visualizations
+  - Use **Line** for a more technical, oscilloscope-style look
+  - Use **Mirror** for symmetrical, modern aesthetics
+  - Use **Filled** for smooth, flowing designs
+  - Use **Particles** for creative, artistic effects
 - **Dark Mode**: Use dark mode when working in low-light environments
-- **Keyboard Shortcuts**: Learn the shortcuts for faster workflow
-- **SVG Export**: Use SVG format when you need to scale images for different sizes
-- **Sample Audio**: Test different styles and settings with sample audio before uploading your own files
+- **Keyboard Shortcuts**: Press Ctrl+Z for undo, Ctrl+Y for redo to quickly iterate on designs
+- **Custom Gradients**: Start with 2-3 colors and add more if needed - too many colors can look busy
 
 ## 🛠️ Technical Details
 
 ### Built With
 
 - **HTML5 Canvas** - For high-performance waveform rendering
-- **Web Audio API** - For audio processing and playback
-- **Vanilla JavaScript** - No frameworks, pure performance
+- **Web Audio API** - For audio processing
+- **Vanilla JavaScript** - No frameworks, lightweight and fast
 - **PWA Technology** - Service workers and manifest for app-like experience
-- **LocalStorage** - For saving presets and settings
+- **LocalStorage** - For saving dark mode preferences
 
 ### Key Features Under the Hood
 
 - Real-time audio analysis and visualization
 - Configurable sample rate and smoothing algorithms
-- Multi-channel audio support (stereo and mono)
+- Multi-style rendering engine (6 distinct visualization styles)
 - Gradient generation with smooth color interpolation
 - Undo/Redo state management (50 history states)
-- URL-based configuration sharing
-- Clipboard API integration
-- Vector (SVG) and raster (PNG/JPEG) export
+- Optimized canvas rendering for large dimensions
+- Efficient memory management for audio processing
 
 ### Browser Compatibility
 
