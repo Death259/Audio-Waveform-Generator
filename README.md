@@ -1,4 +1,4 @@
-# 🎵 Audio Waveform Generator Pro
+# 🎵 Audio Waveform Generator
 
 A beautiful, feature-rich Progressive Web App (PWA) that generates stunning waveform images from your audio files. Create professional-looking visualizations with extensive customization options and powerful export capabilities.
 
@@ -15,7 +15,7 @@ A beautiful, feature-rich Progressive Web App (PWA) that generates stunning wave
 
 **Color Options:**
 - Solid colors
-- Preset gradients: Rainbow, Sunset, Ocean, Red/White/Blue
+- **9 Preset gradients**: Rainbow, Sunset, Ocean, Fire, Aqua, Purple Haze, Forest, EDM, Red/White/Blue
 - Custom gradients with 2-5 colors and smooth transitions
 - Real-time gradient preview
 
@@ -36,13 +36,13 @@ A beautiful, feature-rich Progressive Web App (PWA) that generates stunning wave
 ### 🔧 **Productivity Features**
 - **Undo/Redo** - Step through your changes (up to 50 history states)
 - **Keyboard Shortcuts** - Work faster with hotkeys
-- **Dark Mode** - Easy on the eyes for low-light environments
-- **Auto-save Settings** - Your preferences persist across sessions
+- **Dark Mode** - Auto-detects OS preference and easy manual toggle
+- **Auto-save Settings** - Your dark mode preference persists across sessions
 
 ### 💾 **Export**
 - **PNG Export** - High-quality raster images
+- **Copy to Clipboard** - Quick sharing directly from the app
 - **One-Click Download** - Save directly to your device
-- **Copy to Clipboard** - Quick sharing (coming soon)
 
 ### 📱 **Progressive Web App**
 - Install on your device like a native app
@@ -54,7 +54,6 @@ A beautiful, feature-rich Progressive Web App (PWA) that generates stunning wave
 ### ⌨️ **Keyboard Shortcuts**
 - **Ctrl/Cmd + Z** - Undo
 - **Ctrl/Cmd + Y** - Redo
-- **D** - Toggle Dark Mode
 
 ## 🎯 Supported Audio Formats
 
@@ -98,7 +97,8 @@ Simply visit the live app and start creating waveforms immediately:
    - Wait for processing (usually just a few seconds)
 
 2. **Customize Your Waveform**
-   - **Color Mode**: Choose solid color or gradient presets (Rainbow, Sunset, Ocean, Red/White/Blue)
+   - **Color Mode**: Choose solid color or one of 9 gradient presets:
+     - Rainbow, Sunset, Ocean, Fire, Aqua, Purple Haze, Forest, EDM, Red/White/Blue
    - **Custom Gradient**: Pick 2-5 colors with checkboxes to enable/disable colors 3-5
    - **Background Color**: Set any solid background color
    - **Dimensions**: Adjust width (400-4000px) and height (100-2000px)
@@ -106,11 +106,12 @@ Simply visit the live app and start creating waveforms immediately:
    - **Smoothing**: Control detail (10 = very detailed, 200 = very smooth)
    - **Opacity**: Adjust transparency (0-100%)
 
-3. **Generate & Download**
+3. **Generate & Export**
    - Click "🎨 Generate Waveform" to create your visualization
    - Click "💾 Download PNG" to save to your device
+   - Click "📋 Copy to Clipboard" to paste directly into other apps
    - Use Undo/Redo buttons to step through changes
-   - Toggle Dark Mode for comfortable viewing in any lighting
+   - Toggle Dark Mode with the 🌙/☀️ button (or it auto-detects your OS preference)
 
 ## 🎨 Waveform Styles
 
@@ -123,11 +124,17 @@ Simply visit the live app and start creating waveforms immediately:
 
 ## 🎨 Color Options
 
+**Preset Gradients:**
 - **Solid** - Single color waveform
 - **Rainbow** - Classic 7-color rainbow spectrum
-- **Red/White/Blue** - Patriotic color scheme
 - **Sunset** - Warm pinks, yellows, and oranges
 - **Ocean** - Cool blues and purples
+- **Fire** - Intense reds, oranges, and gold
+- **Aqua** - Cool cyan, turquoise, and sky blue
+- **Purple Haze** - Deep indigo to hot pink
+- **Forest** - Natural greens from dark to yellow-green
+- **EDM** - Vibrant cyan, magenta, and yellow
+- **Red/White/Blue** - Patriotic color scheme
 - **Custom** - Your own combination of 2-5 colors with smooth transitions
 
 ## 💡 Tips & Best Practices
@@ -142,9 +149,16 @@ Simply visit the live app and start creating waveforms immediately:
   - Use **Mirror** for symmetrical, modern aesthetics
   - Use **Filled** for smooth, flowing designs
   - Use **Particles** for creative, artistic effects
-- **Dark Mode**: Use dark mode when working in low-light environments
+- **Gradient Selection**:
+  - **Fire** - Great for rock, metal, or energetic content
+  - **Aqua** - Perfect for chill, relaxing, or water-themed audio
+  - **Purple Haze** - Ideal for psychedelic, dreamy, or artistic content
+  - **Forest** - Natural for acoustic, folk, or nature sounds
+  - **EDM** - Vibrant choice for electronic music and upbeat content
+- **Dark Mode**: Automatically detects your OS preference, but you can toggle it manually anytime
 - **Keyboard Shortcuts**: Press Ctrl+Z for undo, Ctrl+Y for redo to quickly iterate on designs
 - **Custom Gradients**: Start with 2-3 colors and add more if needed - too many colors can look busy
+- **Copy to Clipboard**: Use this feature to quickly paste waveforms into social media, presentations, or design tools
 
 ## 🛠️ Technical Details
 
@@ -155,16 +169,18 @@ Simply visit the live app and start creating waveforms immediately:
 - **Vanilla JavaScript** - No frameworks, lightweight and fast
 - **PWA Technology** - Service workers and manifest for app-like experience
 - **LocalStorage** - For saving dark mode preferences
+- **Clipboard API** - For copying images directly to clipboard
 
 ### Key Features Under the Hood
 
 - Real-time audio analysis and visualization
 - Configurable sample rate and smoothing algorithms
 - Multi-style rendering engine (6 distinct visualization styles)
-- Gradient generation with smooth color interpolation
+- Gradient generation with smooth color interpolation (9 presets + custom)
 - Undo/Redo state management (50 history states)
 - Optimized canvas rendering for large dimensions
 - Efficient memory management for audio processing
+- OS dark mode detection with manual override capability
 
 ### Browser Compatibility
 
