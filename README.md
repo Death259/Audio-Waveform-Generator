@@ -278,4 +278,4 @@ Found a bug? Have a feature request? Want to say thanks?
 
 **Made with 🎵 by AI and Death259**
 
-[⬆ Back to Top](#-audio-waveform-generator-pro)
+[⬆ Back to Top](#-audio-waveform-generator)
