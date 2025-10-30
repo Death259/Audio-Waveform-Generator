@@ -171,6 +171,11 @@
                     <option value="purpleHaze">Purple Haze</option>
                     <option value="forest">Forest</option>
                     <option value="edm">EDM</option>
+                    <option value="gold">Gold</option>
+                    <option value="cherry">Cherry Blossom</option>
+                    <option value="mint">Mint</option>
+                    <option value="neon">Neon</option>
+                    <option value="monochrome">Monochrome</option>
                     <option value="redwhiteblue">Red/White/Blue</option>
                     <option value="custom">Custom Gradient</option>
                 </select>
@@ -235,8 +240,11 @@
         </div>
 
         <button class="btn btn-primary" id="generateBtn" disabled style="margin-bottom: 10px;">🎨 Generate Waveform</button>
-        <button class="btn btn-primary" id="downloadBtn" disabled style="margin-bottom: 10px;">💾 Download PNG</button>
-        <button class="btn btn-primary" id="copyBtn" disabled>📋 Copy to Clipboard</button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <button class="btn btn-primary" id="downloadPngBtn" disabled>💾 PNG</button>
+            <button class="btn btn-primary" id="downloadJpegBtn" disabled>🖼️ JPEG</button>
+            <button class="btn btn-primary" id="copyBtn" disabled>📋 Copy</button>
+        </div>
     </div>
 
     <script>
@@ -268,7 +276,12 @@
             aqua: ['#008B8B', '#00CED1', '#87CEEB'],
             purpleHaze: ['#4B0082', '#8B008B', '#FF1493'],
             forest: ['#013220', '#228B22', '#9ACD32'],
-            edm: ['#00FFFF', '#FF00FF', '#FFFF00']
+            edm: ['#00FFFF', '#FF00FF', '#FFFF00'],
+            gold: ['#8B7500', '#DAA520', '#FFD700', '#FFF8DC'],
+            cherry: ['#8B1A1A', '#FF1493', '#FFB6C1', '#FFF0F5'],
+            mint: ['#006B54', '#00FA9A', '#98FF98', '#F0FFF0'],
+            neon: ['#FF10F0', '#39FF14', '#FFFF00'],
+            monochrome: ['#000000', '#808080', '#FFFFFF']
         };
 
         const $ = id => document.getElementById(id);
@@ -304,8 +317,18 @@
                 }
             });
 
+            // Transparent background button
+            let isTransparent = false;
+            $('transparentBtn').onclick = () => {
+                isTransparent = !isTransparent;
+                $('bgColor').disabled = isTransparent;
+                $('transparentCheck').style.display = isTransparent ? 'block' : 'none';
+                saveState();
+            };
+
             $('generateBtn').onclick = generate;
-            $('downloadBtn').onclick = download;
+            $('downloadPngBtn').onclick = () => download('png');
+            $('downloadJpegBtn').onclick = () => download('jpeg');
             $('copyBtn').onclick = copyToClipboard;
             $('darkBtn').onclick = () => {
                 document.body.classList.toggle('dark-mode');
@@ -379,8 +402,13 @@
             canvas.width = w;
             canvas.height = h;
 
-            ctx.fillStyle = $('bgColor').value;
-            ctx.fillRect(0, 0, w, h);
+            // Background - only draw if not transparent
+            if (!isTransparent) {
+                ctx.fillStyle = $('bgColor').value;
+                ctx.fillRect(0, 0, w, h);
+            } else {
+                ctx.clearRect(0, 0, w, h);
+            }
 
             const data = state.buffer.getChannelData(0);
             const samples = Math.min(w * smooth / 50, w * 4);
@@ -480,17 +508,37 @@
 
             ctx.globalAlpha = 1;
             $('canvasContainer').style.display = 'block';
-            $('downloadBtn').disabled = false;
+            $('downloadPngBtn').disabled = false;
+            $('downloadJpegBtn').disabled = false;
             $('copyBtn').disabled = false;
             showStatus('Done!', 'success');
         }
 
-        function download() {
+        function download(format) {
             const link = document.createElement('a');
-            link.download = 'waveform.png';
-            link.href = canvas.toDataURL('image/png');
+            if (format === 'png') {
+                link.download = 'waveform.png';
+                link.href = canvas.toDataURL('image/png');
+                showStatus('PNG downloaded!', 'success');
+            } else if (format === 'jpeg') {
+                // For JPEG, we need to composite on white if transparent
+                if (isTransparent) {
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = canvas.width;
+                    tempCanvas.height = canvas.height;
+                    const tempCtx = tempCanvas.getContext('2d');
+                    tempCtx.fillStyle = '#ffffff';
+                    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                    tempCtx.drawImage(canvas, 0, 0);
+                    link.download = 'waveform.jpg';
+                    link.href = tempCanvas.toDataURL('image/jpeg', 0.95);
+                } else {
+                    link.download = 'waveform.jpg';
+                    link.href = canvas.toDataURL('image/jpeg', 0.95);
+                }
+                showStatus('JPEG downloaded!', 'success');
+            }
             link.click();
-            showStatus('Downloaded!', 'success');
         }
 
         async function copyToClipboard() {
