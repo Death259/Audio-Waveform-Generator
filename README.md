@@ -1,4 +1,4 @@
-# 🎵 Audio Waveform Generator
+# <img src="logo.svg" width="40" alt="Logo"> Audio Waveform Generator
 
 A beautiful, feature-rich Progressive Web App (PWA) that generates stunning waveform images from your audio files. Create professional-looking visualizations with extensive customization options and powerful export capabilities.
 
