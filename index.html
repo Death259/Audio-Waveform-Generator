@@ -248,23 +248,8 @@
     </div>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    self.addEventListener('install', (e) => {
-                        e.waitUntil(caches.open('waveform-v1').then(c => c.addAll(['/'])));
-                    });
-                    self.addEventListener('fetch', (e) => {
-                        e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
-                    });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl).catch(err => {
-                    console.log('ServiceWorker registration failed (this is okay):', err);
-                });
-            });
-        }
+        // Service worker removed due to browser compatibility issues
+        // The app works perfectly fine without offline capabilities
 
         const state = { buffer: null, history: [], historyIdx: -1 };
         const presets = {
@@ -316,15 +301,6 @@
                     };
                 }
             });
-
-            // Transparent background button
-            let isTransparent = false;
-            $('transparentBtn').onclick = () => {
-                isTransparent = !isTransparent;
-                $('bgColor').disabled = isTransparent;
-                $('transparentCheck').style.display = isTransparent ? 'block' : 'none';
-                saveState();
-            };
 
             $('generateBtn').onclick = generate;
             $('downloadPngBtn').onclick = () => download('png');
@@ -402,13 +378,8 @@
             canvas.width = w;
             canvas.height = h;
 
-            // Background - only draw if not transparent
-            if (!isTransparent) {
-                ctx.fillStyle = $('bgColor').value;
-                ctx.fillRect(0, 0, w, h);
-            } else {
-                ctx.clearRect(0, 0, w, h);
-            }
+            ctx.fillStyle = $('bgColor').value;
+            ctx.fillRect(0, 0, w, h);
 
             const data = state.buffer.getChannelData(0);
             const samples = Math.min(w * smooth / 50, w * 4);
@@ -521,21 +492,8 @@
                 link.href = canvas.toDataURL('image/png');
                 showStatus('PNG downloaded!', 'success');
             } else if (format === 'jpeg') {
-                // For JPEG, we need to composite on white if transparent
-                if (isTransparent) {
-                    const tempCanvas = document.createElement('canvas');
-                    tempCanvas.width = canvas.width;
-                    tempCanvas.height = canvas.height;
-                    const tempCtx = tempCanvas.getContext('2d');
-                    tempCtx.fillStyle = '#ffffff';
-                    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-                    tempCtx.drawImage(canvas, 0, 0);
-                    link.download = 'waveform.jpg';
-                    link.href = tempCanvas.toDataURL('image/jpeg', 0.95);
-                } else {
-                    link.download = 'waveform.jpg';
-                    link.href = canvas.toDataURL('image/jpeg', 0.95);
-                }
+                link.download = 'waveform.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
                 showStatus('JPEG downloaded!', 'success');
             }
             link.click();
