@@ -182,11 +182,11 @@
             </div>
             <div class="control-group" id="solidColor">
                 <label for="waveColor">Waveform Color</label>
-                <input type="color" id="waveColor" value="#667eea">
+                <input type="color" id="waveColor" value="#667eea" colorspace="display-p3" alpha>
             </div>
             <div class="control-group">
                 <label for="bgColor">Background</label>
-                <input type="color" id="bgColor" value="#ffffff">
+                <input type="color" id="bgColor" value="#ffffff" colorspace="display-p3" alpha>
             </div>
             <div class="control-group">
                 <label for="width">Width (px)</label>
@@ -211,20 +211,16 @@
                 <label for="smoothing">Smoothing: <span id="smoothVal">50</span></label>
                 <input type="range" id="smoothing" min="10" max="200" value="50">
             </div>
-            <div class="control-group">
-                <label for="opacity">Opacity: <span id="opacVal">100</span>%</label>
-                <input type="range" id="opacity" min="0" max="100" value="100">
-            </div>
         </div>
 
         <div id="customGradient">
             <h4 style="margin-bottom: 10px; color: var(--text-dark);">Custom Colors (2-5)</h4>
             <div class="controls">
-                <div class="control-group"><label>Color 1</label><input type="color" id="c1" value="#667eea"></div>
-                <div class="control-group"><label>Color 2</label><input type="color" id="c2" value="#764ba2"></div>
-                <div class="control-group"><label>Color 3</label><input type="color" id="c3" value="#f093fb"></div>
-                <div class="control-group"><label>Color 4</label><input type="color" id="c4" value="#4facfe"></div>
-                <div class="control-group"><label>Color 5</label><input type="color" id="c5" value="#43e97b"></div>
+                <div class="control-group"><label>Color 1</label><input type="color" id="c1" value="#667eea" colorspace="display-p3" alpha></div>
+                <div class="control-group"><label>Color 2</label><input type="color" id="c2" value="#764ba2" colorspace="display-p3" alpha></div>
+                <div class="control-group"><label>Color 3</label><input type="color" id="c3" value="#f093fb" colorspace="display-p3" alpha></div>
+                <div class="control-group"><label>Color 4</label><input type="color" id="c4" value="#4facfe" colorspace="display-p3" alpha></div>
+                <div class="control-group"><label>Color 5</label><input type="color" id="c5" value="#43e97b" colorspace="display-p3" alpha></div>
             </div>
             <div style="margin-top: 10px;">
                 <label><input type="checkbox" id="use3" checked> Use Color 3</label>
@@ -290,14 +286,13 @@
                 updatePreview();
             };
             
-            ['waveColor', 'bgColor', 'width', 'height', 'style', 'smoothing', 'opacity', 'c1', 'c2', 'c3', 'c4', 'c5', 'use3', 'use4', 'use5'].forEach(id => {
+            ['waveColor', 'bgColor', 'width', 'height', 'style', 'smoothing', 'c1', 'c2', 'c3', 'c4', 'c5', 'use3', 'use4', 'use5'].forEach(id => {
                 const el = $(id);
                 if (el) {
                     el.onchange = el.oninput = () => {
                         saveState();
                         updatePreview();
                         if (id === 'smoothing') $('smoothVal').textContent = el.value;
-                        if (id === 'opacity') $('opacVal').textContent = el.value;
                     };
                 }
             });
@@ -314,10 +309,7 @@
             $('undoBtn').onclick = undo;
             $('redoBtn').onclick = redo;
 
-            if (localStorage.getItem('dark') === 'true') {
-                document.body.classList.add('dark-mode');
-                $('darkBtn').textContent = '☀️';
-            }
+            loadSettings();
 
             document.onkeydown = e => {
                 if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
@@ -373,7 +365,6 @@
             const h = parseInt($('height').value);
             const style = $('style').value;
             const smooth = parseInt($('smoothing').value);
-            const alpha = parseInt($('opacity').value) / 100;
 
             canvas.width = w;
             canvas.height = h;
@@ -396,7 +387,7 @@
             const norm = filtered.map(v => v / max);
 
             const colors = getColors();
-            ctx.globalAlpha = alpha;
+            ctx.globalAlpha = 1;
             
             if (colors) {
                 const grad = ctx.createLinearGradient(0, 0, w, 0);
@@ -477,7 +468,6 @@
                 }
             }
 
-            ctx.globalAlpha = 1;
             $('canvasContainer').style.display = 'block';
             $('downloadPngBtn').disabled = false;
             $('downloadJpegBtn').disabled = false;
@@ -528,7 +518,6 @@
                 height: $('height').value,
                 style: $('style').value,
                 smoothing: $('smoothing').value,
-                opacity: $('opacity').value,
                 c1: $('c1').value,
                 c2: $('c2').value,
                 c3: $('c3').value,
@@ -572,7 +561,6 @@
             $('height').value = s.height;
             $('style').value = s.style;
             $('smoothing').value = s.smoothing;
-            $('opacity').value = s.opacity;
             $('c1').value = s.c1;
             $('c2').value = s.c2;
             $('c3').value = s.c3;
@@ -582,7 +570,6 @@
             $('use4').checked = s.use4;
             $('use5').checked = s.use5;
             $('smoothVal').textContent = s.smoothing;
-            $('opacVal').textContent = s.opacity;
             $('colorMode').dispatchEvent(new Event('change'));
             updatePreview();
         }
@@ -590,6 +577,41 @@
         function updateHistoryButtons() {
             $('undoBtn').disabled = state.historyIdx <= 0;
             $('redoBtn').disabled = state.historyIdx >= state.history.length - 1;
+        }
+
+        function loadSettings() {
+            // Check if user has manually set dark mode preference
+            const savedDarkMode = localStorage.getItem('dark');
+            
+            if (savedDarkMode !== null) {
+                // User has a saved preference, use that
+                if (savedDarkMode === 'true') {
+                    document.body.classList.add('dark-mode');
+                    $('darkBtn').textContent = '☀️';
+                }
+            } else {
+                // No saved preference, check OS preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.classList.add('dark-mode');
+                    $('darkBtn').textContent = '☀️';
+                }
+            }
+            
+            // Listen for OS theme changes
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                    // Only auto-switch if user hasn't manually set a preference
+                    if (localStorage.getItem('dark') === null) {
+                        if (e.matches) {
+                            document.body.classList.add('dark-mode');
+                            $('darkBtn').textContent = '☀️';
+                        } else {
+                            document.body.classList.remove('dark-mode');
+                            $('darkBtn').textContent = '🌙';
+                        }
+                    }
+                });
+            }
         }
 
         document.addEventListener('DOMContentLoaded', init);
